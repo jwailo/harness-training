@@ -428,7 +428,10 @@
     <div class="nav-dot" onclick="goTo(6)"></div>
     <div class="nav-dot" onclick="goTo(7)"></div>
     <div class="nav-dot" onclick="goTo(8)"></div>
-    <span class="nav-counter">1 / 9</span>
+    <div class="nav-dot" onclick="goTo(9)"></div>
+    <div class="nav-dot" onclick="goTo(10)"></div>
+    <div class="nav-dot" onclick="goTo(11)"></div>
+    <span class="nav-counter">1 / 12</span>
   </div>
 </nav>
 
@@ -459,13 +462,22 @@
 
     <div class="callout">
       <div class="callout-label">Session structure</div>
-      <p><strong>Part 1:</strong> The philosophy — why this works (10 min)<br>
-      <strong>Part 2:</strong> Linear — project management as AI memory (10 min)<br>
-      <strong>Part 3:</strong> Antigravity — the IDE that connects everything (5 min)<br>
-      <strong>Part 4:</strong> Connecting the MCPs (10 min)<br>
-      <strong>Part 5:</strong> Creating cards that work as prompts (10 min)<br>
-      <strong>Part 6:</strong> Hooks — automated guardrails (5 min)<br>
-      <strong>Part 7:</strong> Hands-on — set up your first project (10 min)</p>
+      <p><strong>Part 1:</strong> Why Claude — what changes and why (5 min)<br>
+      <strong>Part 2:</strong> Claude Code — what it is and how it works (5 min)<br>
+      <strong>Part 3:</strong> Setting up Linear — your new project board (5 min)<br>
+      <strong>Part 4:</strong> The philosophy — why this system works (10 min)<br>
+      <strong>Part 5:</strong> Linear as AI memory — cards as prompts (10 min)<br>
+      <strong>Part 6:</strong> Antigravity — the IDE that connects everything (5 min)<br>
+      <strong>Part 7:</strong> Connecting the MCPs (10 min)<br>
+      <strong>Part 8:</strong> Creating cards that work as prompts (10 min)<br>
+      <strong>Part 9:</strong> Hooks — automated guardrails (5 min)<br>
+      <strong>Part 10:</strong> CLAUDE.md — project instructions (5 min)<br>
+      <strong>Part 11:</strong> Hands-on — set up your workspace (10 min)</p>
+    </div>
+
+    <div class="callout callout-green">
+      <div class="callout-label">Note</div>
+      <p>We may not get through everything today — that's fine. The key is understanding the philosophy and getting your core tools set up. We can complete the hands-on setup in a follow-up session.</p>
     </div>
 
     <div class="nav-buttons">
@@ -475,16 +487,194 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 1: THE PHILOSOPHY -->
+  <!-- SECTION 1: WHY CLAUDE -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="section" id="s1">
     <div class="section-number">Part 1</div>
-    <h1>The Philosophy</h1>
-    <p class="section-subtitle">Why most people hit a ceiling with AI coding — and how to break through it.</p>
+    <h1>Why Claude?</h1>
+    <p class="section-subtitle">You're already using Gemini effectively. Here's why we're adding Claude to the toolkit — and what it unlocks.</p>
+
+    <div class="card card-accent">
+      <h3>This isn't about replacing Gemini</h3>
+      <p>Gemini is a capable AI tool. But the system we've built — the Harness Framework — is designed around Claude's specific capabilities. The two key things Claude has that make this work:</p>
+      <ul>
+        <li><strong>MCP (Model Context Protocol)</strong> — Claude can directly read and write to tools like Linear, Google Drive, and GitHub. This means Claude Chat can create task cards, and Claude Code can read them and update their status — all without you copying and pasting anything.</li>
+        <li><strong>Claude Code</strong> — a dedicated coding agent that lives in your terminal or IDE. It reads files, writes code, runs tests, and interacts with Linear. It's separate from Claude Chat (the conversational AI), and that separation is what creates quality.</li>
+      </ul>
+    </div>
 
     <div class="card">
-      <h3>The problem with Claude Code alone</h3>
-      <p>You already use Claude Code, so you know it's powerful. But you've probably noticed:</p>
+      <h3>What changes in your workflow</h3>
+      <div class="compare">
+        <div class="card" style="margin: 0; border-left: 3px solid var(--muted);">
+          <div style="font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 8px;">BEFORE (Gemini)</div>
+          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
+            You describe what you want → Gemini helps → you manually track progress → next session starts from zero → you re-explain context
+          </div>
+        </div>
+        <div class="card" style="margin: 0; border-left: 3px solid var(--green);">
+          <div style="font-size: 11px; color: var(--green); font-weight: 700; margin-bottom: 8px;">AFTER (The Harness)</div>
+          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
+            You describe what you want → Claude Chat creates cards in Linear → Claude Code reads cards and builds → Linear remembers everything → next session picks up where you left off
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>The tools you'll be using</h3>
+      <div class="checklist">
+        <div class="check-item"><span class="check-icon">→</span> <strong>Claude Chat</strong> (claude.ai) — the strategist. You already know this one. It plans, writes specs, and creates task cards.</div>
+        <div class="check-item"><span class="check-icon">→</span> <strong>Claude Code</strong> — the builder. A coding agent that runs in your IDE. It reads task cards from Linear and writes the code.</div>
+        <div class="check-item"><span class="check-icon">→</span> <strong>Linear</strong> — the shared memory. A project management tool that both Claude Chat and Claude Code can read and write to.</div>
+        <div class="check-item"><span class="check-icon">→</span> <strong>Antigravity</strong> — the IDE. A VS Code fork with built-in AI agent support and MCP connections.</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prev()">← Back</button>
+      <button class="btn btn-primary" onclick="next()">Next: Claude Code →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 2: WHAT IS CLAUDE CODE -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section" id="s2">
+    <div class="section-number">Part 2</div>
+    <h1>What is Claude Code?</h1>
+    <p class="section-subtitle">You know Claude Chat — the conversational AI. Claude Code is its counterpart for building things.</p>
+
+    <div class="card card-accent">
+      <h3>Claude Chat vs Claude Code</h3>
+      <div class="compare">
+        <div class="card" style="margin: 0; border-left: 3px solid var(--blue);">
+          <div style="font-size: 11px; color: var(--blue); font-weight: 700; margin-bottom: 8px;">CLAUDE CHAT</div>
+          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
+            Conversational AI at claude.ai<br>
+            Good at: strategy, planning, writing, analysis<br>
+            Creates: documents, specs, task cards<br>
+            Lives in: your browser
+          </div>
+        </div>
+        <div class="card" style="margin: 0; border-left: 3px solid var(--green);">
+          <div style="font-size: 11px; color: var(--green); font-weight: 700; margin-bottom: 8px;">CLAUDE CODE</div>
+          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
+            Coding agent that runs in your IDE<br>
+            Good at: writing code, running tests, file management<br>
+            Creates: code, tests, deployments<br>
+            Lives in: Antigravity (your IDE)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>How Claude Code works</h3>
+      <p>Claude Code sits inside your IDE (Antigravity) as a panel. You give it an instruction — either by typing directly or by pointing it at a Linear card — and it:</p>
+      <ul>
+        <li>Reads your project files to understand the codebase</li>
+        <li>Writes code based on the instruction</li>
+        <li>Runs tests to verify its work</li>
+        <li>Fixes any issues it finds</li>
+        <li>Reports back when it's done</li>
+      </ul>
+      <div class="spacer"></div>
+      <p>The key difference from asking Claude Chat to write code: <strong>Claude Code actually sees your files, runs your tests, and modifies your project directly.</strong> Claude Chat just gives you text to copy-paste.</p>
+    </div>
+
+    <div class="callout callout-green">
+      <div class="callout-label">You don't need to be technical</div>
+      <p>Claude Code does the technical work. Your job is to give it clear instructions (which is what the card system is for) and review the output. You're the director, not the coder.</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prev()">← Back</button>
+      <button class="btn btn-primary" onclick="next()">Next: Setting up Linear →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 3: SETTING UP LINEAR -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section" id="s3">
+    <div class="section-number">Part 3</div>
+    <h1>Setting Up Linear</h1>
+    <p class="section-subtitle">Linear is where everything connects. Let's get you set up.</p>
+
+    <div class="card card-accent">
+      <h3>What is Linear?</h3>
+      <p>Linear is a project management tool — think of it like a smart task board. But in the Harness, it serves a bigger purpose: it's the <strong>shared memory</strong> between you, Claude Chat, and Claude Code. When Claude Chat creates a task card, Claude Code can read it. When Claude Code finishes a task, it updates the card. Everything stays in sync without you having to relay information.</p>
+    </div>
+
+    <div class="card">
+      <h3>Getting started</h3>
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Create your account</h4>
+          <p>Go to <strong>linear.app</strong> and sign up. The free plan supports up to 250 issues — more than enough to get started.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Create a workspace</h4>
+          <p>Name it something relevant — your team name or your own name. This is your top-level container.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Create a team</h4>
+          <p>Inside the workspace, create a team (e.g. "GTM"). Teams are groups of related work.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Create your first project</h4>
+          <p>Inside the team, create a project for whatever you're building first. This is where your task cards will live.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>The hierarchy</h3>
+      <div class="flow">
+        <div class="flow-box" style="background: var(--cyan-dim); color: var(--cyan);">Workspace</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background: var(--blue-dim); color: var(--blue);">Team</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background: var(--green-dim); color: var(--green);">Project</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background: var(--amber-dim); color: var(--amber);">Cards</div>
+      </div>
+      <p>Cards are the units of work. Each card has a description, labels, dependencies, and status. In the Harness, cards are the instructions that Claude Code reads and executes.</p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">We'll do this together</div>
+      <p>Don't worry about getting everything perfect now. We'll set up your Linear account and first project together during the hands-on section at the end.</p>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prev()">← Back</button>
+      <button class="btn btn-primary" onclick="next()">Next: The Philosophy →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 4: THE PHILOSOPHY (was section 1) -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="section" id="s4">
+    <div class="section-number">Part 4</div>
+    <h1>The Philosophy</h1>
+    <p class="section-subtitle">Why most people hit a ceiling with AI — and how to break through it.</p>
+
+    <div class="card">
+      <h3>The problem with AI tools alone</h3>
+      <p>Whether you're using Gemini, Claude Chat, or any other AI tool, you've probably noticed:</p>
       <ul>
         <li>Every new session starts from zero — it doesn't remember what you did yesterday</li>
         <li>Complex projects drift — the AI loses track of the big picture</li>
@@ -492,7 +682,7 @@
         <li>Quality is inconsistent — sometimes it skips tests, cuts corners, or goes off-brief</li>
       </ul>
       <div class="spacer"></div>
-      <p>The Harness solves this by adding <strong>two things</strong> around Claude Code: a strategy layer and a memory layer.</p>
+      <p>The Harness solves this by adding <strong>two things</strong> around your AI tools: a strategy layer and a memory layer.</p>
     </div>
 
     <div class="card">
@@ -545,8 +735,8 @@
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 2: LINEAR -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s2">
-    <div class="section-number">Part 2</div>
+  <div class="section" id="s5">
+    <div class="section-number">Part 5</div>
     <h1>Linear — AI Memory, Not Just Task Management</h1>
     <p class="section-subtitle">You might know Linear as a project management tool. In the Harness, it's something more.</p>
 
@@ -620,8 +810,8 @@
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 3: ANTIGRAVITY -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s3">
-    <div class="section-number">Part 3</div>
+  <div class="section" id="s6">
+    <div class="section-number">Part 6</div>
     <h1>Antigravity — Your IDE</h1>
     <p class="section-subtitle">Why we use Antigravity instead of VS Code or Cursor.</p>
 
@@ -657,8 +847,8 @@
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 4: MCP SETUP -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s4">
-    <div class="section-number">Part 4</div>
+  <div class="section" id="s7">
+    <div class="section-number">Part 7</div>
     <h1>Connecting the MCPs</h1>
     <p class="section-subtitle">MCP (Model Context Protocol) is how Claude Code talks to Linear. Let's wire it up.</p>
 
@@ -750,8 +940,8 @@
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 5: CREATING CARDS -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s5">
-    <div class="section-number">Part 5</div>
+  <div class="section" id="s8">
+    <div class="section-number">Part 8</div>
     <h1>Creating Cards That Work as Prompts</h1>
     <p class="section-subtitle">The quality of your cards determines whether Claude Code can work autonomously or keeps asking you questions.</p>
 
@@ -840,8 +1030,8 @@ Stop and ask if you hit a decision not covered in the card spec.</span></div>
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 6: HOOKS -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s6">
-    <div class="section-number">Part 6</div>
+  <div class="section" id="s9">
+    <div class="section-number">Part 9</div>
     <h1>Hooks — Automated Guardrails</h1>
     <p class="section-subtitle">Hooks are scripts that run automatically during Claude Code sessions. They enforce discipline so you don't have to.</p>
 
@@ -906,8 +1096,8 @@ Stop and ask if you hit a decision not covered in the card spec.</span></div>
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 7: CLAUDE.MD -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s7">
-    <div class="section-number">Part 7</div>
+  <div class="section" id="s10">
+    <div class="section-number">Part 10</div>
     <h1>CLAUDE.md — Project Instructions for the AI</h1>
     <p class="section-subtitle">Every project needs a CLAUDE.md file. It's the first thing Claude Code reads when it starts a session.</p>
 
@@ -974,24 +1164,25 @@ document: "The Harness Framework v4") for process context.
   <!-- ═══════════════════════════════════════════ -->
   <!-- SECTION 8: HANDS-ON -->
   <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s8">
-    <div class="section-number">Part 8</div>
+  <div class="section" id="s11">
+    <div class="section-number">Part 11</div>
     <h1>Let's Set You Up</h1>
     <p class="section-subtitle">Time to get everything running. We'll do this step by step together.</p>
 
     <div class="card card-accent">
       <h3>Setup checklist</h3>
       <div class="checklist">
-        <div class="check-item"><span class="check-icon">□</span> <strong>1. Create your Claude Chat project</strong> — go to claude.ai → Projects → Create. Paste the system instructions (I'll give you these).</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>2. Connect Linear MCP to Claude Chat</strong> — in the project settings, connect the Linear integration.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>3. Install Antigravity</strong> — download from anti-gravity.dev, drag to Applications.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>4. Get your Linear API key</strong> — Linear → Settings → API → create Personal API key.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>5. Configure Linear MCP in Antigravity</strong> — paste the config into mcp_config.json.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>6. Verify the connection</strong> — tell Claude Code to list your Linear issues.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>7. Copy the Harness Framework doc</strong> — get the v4 doc into your Linear workspace.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>8. Create your first project</strong> — create a Linear project with properly structured cards.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>9. Hooks install automatically</strong> — Claude Code creates all hooks from the v4 doc when it runs the Project Setup card. No separate download needed.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>10. Run your first card</strong> — give Claude Code the kickoff prompt and watch it chain.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>1. Create your Linear account</strong> — go to linear.app → sign up (free plan). Create a workspace and a team.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>2. Create your Claude Chat project</strong> — go to claude.ai → Projects → Create. Paste the system instructions (I'll give you these).</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>3. Connect Linear MCP to Claude Chat</strong> — in the project settings, connect the Linear integration.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>4. Install Antigravity</strong> — download from anti-gravity.dev, drag to Applications.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>5. Get your Linear API key</strong> — Linear → Settings → API → create Personal API key.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>6. Configure Linear MCP in Antigravity</strong> — paste the config into mcp_config.json.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>7. Verify the connection</strong> — tell Claude Code to list your Linear issues.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>8. Copy the Harness Framework doc</strong> — get the v4 doc into your Linear workspace.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>9. Create your first project</strong> — create a Linear project with properly structured cards.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>10. Hooks install automatically</strong> — Claude Code creates all hooks from the v4 doc when it runs the Project Setup card. No separate download needed.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>11. Run your first card</strong> — give Claude Code the kickoff prompt and watch it chain.</div>
       </div>
     </div>
 
@@ -1044,7 +1235,7 @@ Linear project: [varies per project]</div>
 
 <script>
   let current = 0;
-  const total = 9;
+  const total = 12;
 
   function goTo(n) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
