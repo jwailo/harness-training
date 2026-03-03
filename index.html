@@ -817,25 +817,48 @@
 
     <div class="card card-accent">
       <h3>What is Antigravity?</h3>
-      <p>Antigravity is a VS Code fork built specifically for AI-assisted development. It looks and feels like VS Code (same extensions, same shortcuts, same file tree), but it has a built-in agent manager and native MCP support. This means:</p>
-      <ul>
-        <li>Claude Code runs inside the IDE — not in a separate terminal</li>
-        <li>MCP servers (Linear, GitHub) are configured once and available to every session</li>
-        <li>The agent can read your files, run commands, and interact with Linear without switching tools</li>
-        <li>You can see what the agent is doing in real-time in a dedicated panel</li>
-      </ul>
+      <p>Antigravity is a VS Code fork built specifically for AI-assisted development. It looks and feels like VS Code (same extensions, same shortcuts, same file tree), but it has native MCP support for connecting to tools like Linear. If you've used VS Code before, the switch is seamless.</p>
     </div>
 
-    <div class="card">
-      <h3>Why not Cursor?</h3>
-      <p>Cursor is good, but it locks you into their AI model. Antigravity lets you use Claude Code directly — same model, same capabilities, but you control the config. The MCP integration is also more flexible, which matters for the Linear connection.</p>
+    <div class="card card-pink">
+      <h3>Important: Claude Code runs in the Terminal, not the built-in panel</h3>
+      <p>Antigravity has its own built-in AI panel (bottom right). <strong>Do not use this</strong> — it uses Antigravity's own credits and is not Claude Code.</p>
       <div class="spacer"></div>
-      <p>If you're already comfortable with VS Code, the switch is seamless — your extensions, settings, and keybindings carry over.</p>
+      <p>Claude Code runs in the <strong>Terminal</strong> inside Antigravity. Here's how to set it up:</p>
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Open a terminal</h4>
+          <p>In Antigravity: <strong>Terminal → New Terminal</strong> (or press <code>Ctrl + `</code>)</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Install Claude Code (one-time only)</h4>
+          <div class="code">npm install -g @anthropic-ai/claude-code</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Launch Claude Code in dangerous mode</h4>
+          <div class="code">claude --dangerously-skip-permissions</div>
+          <p>This skips all confirmation prompts so Claude Code runs autonomously. Use this every time you start a session.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>First time: log in</h4>
+          <p>The first time you run <code>claude</code>, it will ask you to authenticate. Select <strong>"Claude account with subscription"</strong>, then <strong>"Login method 1"</strong>, and authorise in the browser.</p>
+        </div>
+      </div>
     </div>
 
     <div class="callout callout-green">
       <div class="callout-label">Key concept</div>
-      <p>Antigravity is the <strong>environment</strong>. Linear is the <strong>memory</strong>. Claude Code is the <strong>builder</strong>. Claude Chat is the <strong>strategist</strong>. Each has a specific role — don't collapse them.</p>
+      <p>Antigravity is the <strong>environment</strong> (where your files and terminal live). Claude Code is the <strong>builder</strong> (runs in the terminal). Claude Chat is the <strong>strategist</strong> (runs in claude.ai). Linear is the <strong>memory</strong> (connects them all). Don't mix them up.</p>
     </div>
 
     <div class="nav-buttons">
@@ -1172,55 +1195,77 @@ document: "The Harness Framework v4") for process context.
     <div class="card card-accent">
       <h3>Setup checklist</h3>
       <div class="checklist">
-        <div class="check-item"><span class="check-icon">□</span> <strong>1. Create your Linear account</strong> — go to linear.app → sign up (free plan). Create a workspace and a team.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>2. Create your Claude Chat project</strong> — go to claude.ai → Projects → Create. Paste the system instructions (I'll give you these).</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>3. Connect Linear MCP to Claude Chat</strong> — in the project settings, connect the Linear integration.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>4. Install Antigravity</strong> — download from anti-gravity.dev, drag to Applications.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>5. Get your Linear API key</strong> — Linear → Settings → API → create Personal API key.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>6. Configure Linear MCP in Antigravity</strong> — paste the config into mcp_config.json.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>7. Verify the connection</strong> — tell Claude Code to list your Linear issues.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>8. Copy the Harness Framework doc</strong> — get the v4 doc into your Linear workspace.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>9. Create your first project</strong> — create a Linear project with properly structured cards.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>10. Hooks install automatically</strong> — Claude Code creates all hooks from the v4 doc when it runs the Project Setup card. No separate download needed.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>11. Run your first card</strong> — give Claude Code the kickoff prompt and watch it chain.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>1. Get into Linear</strong> — if you've been invited to the Ailo workspace, you're already in. Check you can see the GTM team and the Harness Framework v4 doc.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>2. Create your Claude Chat project</strong> — go to claude.ai (use the app, not browser) → Projects → Create. Name it "Building with AI". Paste the system instructions below.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>3. Connect Linear MCP to Claude Chat</strong> — Settings → Connectors → Browse → search "Linear" → Connect. Ask an org admin to enable it if needed.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>4. Verify Claude Chat + Linear</strong> — in your project, ask "Please list my Linear issues". If it returns results, the connection works.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>5. Install Antigravity</strong> — download from anti-gravity.dev → drag to Applications → open it.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>6. Get your Linear API key</strong> — Linear → your avatar (bottom left) → Settings → API → Personal API keys → Create key. Save it in 1Password as a Secure Note — you only see it once.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>7. Configure Linear MCP in Antigravity</strong> — press Cmd+Shift+P → type "MCP" → Manage MCP Servers → View raw config → paste the JSON config (shown below) with your API key → Cmd+S to save → Refresh.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>8. Install Claude Code in the terminal</strong> — in Antigravity, open Terminal → New Terminal. Ignore the built-in AI panel (bottom right) — that's not Claude Code. Run:<br><code style="color: var(--green); font-size: 12px;">npm install -g @anthropic-ai/claude-code</code></div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>9. Launch Claude Code in dangerous mode</strong> — in the same terminal, run:<br><code style="color: var(--green); font-size: 12px;">claude --dangerously-skip-permissions</code><br>First time: select "Claude account with subscription" → login method 1 → authorise in browser. Use this command every time you start a session.</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>10. Test it</strong> — tell Claude Chat to create cards for a simple project. Then give Claude Code the kickoff prompt and watch it chain through the cards.</div>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card card-pink">
       <h3>Claude Chat system instructions</h3>
       <p>Paste this into your Claude Project's custom instructions:</p>
       <div class="code" style="font-size: 11px;">You are a strategic AI assistant working within the Harness
 Framework v4.
 
 Your role is Layer 1 (Strategist): you help with planning,
-architecture, card creation, and decision-making. You do NOT
-write code — that's Claude Code's job.
+architecture, card creation, and decision-making.
 
-Key behaviours:
-- When the user signals a new project, read "The Harness
-  Framework v4" document from Linear and follow the New
-  Project Setup Checklist
-- Create Linear cards via MCP with full specs (Context,
-  Requirements, Definition of Done)
-- Label every card: Agent, Claude Chat, or Manual
-- Set dependencies and blocking relationships
-- Never tell the user to do something that Claude Code
-  or you can do instead
-- Cards are the prompt — write them so Claude Code can
-  execute without asking questions
+<span class="highlight">CRITICAL RULES:</span>
+<span class="highlight">- NEVER build artifacts, write code, or create files directly.</span>
+<span class="highlight">- ALWAYS create Linear cards first. Cards are the work.</span>
+<span class="highlight">- Before starting ANY new project, read the Harness Framework</span>
+<span class="highlight">  v4 document from Linear at this URL:</span>
+<span class="highlight">  https://linear.app/ailo/document/the-harness-framework-v4-fbd8201f8f53</span>
+<span class="highlight">  and follow the New Project Setup Checklist.</span>
+<span class="highlight">- Do NOT proceed until you have read the process document.</span>
+
+When the user describes something they want to build:
+1. Ask clarifying questions first
+2. Read the Harness Framework v4 doc from Linear
+3. Create a Linear project with properly structured cards
+4. Each card must have: Context, Requirements, Definition
+   of Done, Label (Agent/Claude Chat/Manual), Dependencies
+5. Give the user a kickoff prompt to paste into Claude Code
+
+You do NOT write code — that's Claude Code's job.
+Claude Code reads the cards and builds them.
+You create the cards and manage the strategy.
 
 Linear team: GTM
 Linear project: [varies per project]</div>
     </div>
 
-    <div class="callout callout-green">
-      <div class="callout-label">What happens next</div>
-      <p>Once this is set up, your workflow becomes: <strong>open Claude Chat → describe what you want → Claude Chat creates the cards → you give Claude Code one prompt → it builds everything → you review and deploy.</strong> The system remembers everything across sessions because Linear is the shared memory.</p>
+    <div class="card">
+      <h3>Linear MCP config for Antigravity</h3>
+      <p>Paste this into the MCP config JSON file (Cmd+Shift+P → "MCP" → Manage MCP Servers → View raw config):</p>
+      <div class="code" style="font-size: 11px;">{
+  "mcpServers": {
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "mcp-linear"],
+      "env": {
+        "LINEAR_API_KEY": "<span class="highlight">lin_api_PASTE_YOUR_KEY_HERE</span>"
+      }
+    }
+  }
+}</div>
     </div>
 
-    <div class="card" style="background: var(--cyan-dim); border-color: rgba(34,211,238,0.2);">
+    <div class="callout callout-green">
+      <div class="callout-label">What happens next</div>
+      <p>Once this is set up, your workflow becomes: <strong>open Claude Chat → describe what you want → Claude Chat creates the cards in Linear → open Antigravity terminal → run <code>claude --dangerously-skip-permissions</code> → paste the kickoff prompt → Claude Code builds everything → you review and deploy.</strong></p>
+    </div>
+
+    <div class="card" style="background: var(--cyan-dim); border-color: rgba(238,11,79,0.15);">
       <h3 style="color: var(--cyan);">You're ready.</h3>
-      <p>The Harness Framework v4 doc lives in Linear as the permanent reference. Your Claude Chat project knows the process. Your hooks enforce discipline. Your CLAUDE.md gives Claude Code project context. And Linear ties it all together.</p>
+      <p>The Harness Framework v4 doc lives in Linear as the permanent reference. Your Claude Chat project knows the process and will ALWAYS create cards before building. Claude Code runs in the terminal with dangerous mode. And Linear ties it all together as the shared memory.</p>
       <div class="spacer"></div>
       <p><strong>The goal isn't zero human involvement. It's zero unnecessary human involvement.</strong></p>
     </div>
