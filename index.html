@@ -1,1230 +1,865 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Harness Framework — Setup Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #FFFFFF;
-    --surface: #F7F7F7;
-    --surface2: #f0f0f2;
-    --border: #e2e2e6;
-    --text: #1C1E26;
-    --dim: #4a4c56;
-    --muted: #9A9BA7;
-    --cyan: #EE0B4F;
-    --cyan-dim: rgba(238,11,79,0.05);
-    --green: #1a9e6a;
-    --green-dim: rgba(26,158,106,0.06);
-    --purple: #6b6d7a;
-    --purple-dim: rgba(107,109,122,0.06);
-    --amber: #c4850a;
-    --amber-dim: rgba(196,133,10,0.06);
-    --pink: #EE0B4F;
-    --pink-dim: rgba(238,11,79,0.04);
-    --blue: #3a7bbf;
-    --blue-dim: rgba(58,123,191,0.06);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Harness Framework — Setup Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-raised: #1a1a26;
+      --border: rgba(255,255,255,0.06);
+      --border-active: rgba(255,255,255,0.12);
+      --text: #e8e8ed;
+      --text-dim: #8888a0;
+      --text-faint: #55556a;
+      --cyan: #22d3ee;
+      --cyan-dim: rgba(34,211,238,0.06);
+      --cyan-glow: rgba(34,211,238,0.15);
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.06);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251,191,36,0.08);
+      --red: #f87171;
+      --red-dim: rgba(248,113,113,0.06);
+      --purple: #a78bfa;
+      --purple-dim: rgba(167,139,250,0.06);
+      --font-body: 'Outfit', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 10px;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: 'Inter', 'Circular Std', -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* Navigation */
-  .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 32px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+      min-height: 100vh;
+    }
 
-  .nav-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--cyan);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: -0.5px;
-  }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
 
-  .nav-progress {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
+    .slide { display: none; }
+    .slide.active { display: block; }
 
-  .nav-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--border);
-    cursor: pointer;
-    transition: all 0.3s;
-  }
+    /* Progress bar */
+    .progress-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .progress-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 48px;
+    }
+    .progress-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--cyan);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    .progress-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+    }
 
-  .nav-dot.active { background: var(--cyan); box-shadow: 0 0 8px rgba(238,11,79,0.3); }
-  .nav-dot.done { background: var(--green); }
+    /* Section badge */
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .badge-learn {
+      background: var(--purple-dim);
+      color: var(--purple);
+      border: 1px solid rgba(167,139,250,0.15);
+    }
+    .badge-setup {
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid rgba(74,222,128,0.15);
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .badge-learn .badge-dot { background: var(--purple); }
+    .badge-setup .badge-dot { background: var(--green); }
 
-  .nav-counter {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-left: 12px;
-  }
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      margin-bottom: 24px;
+    }
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    p { margin-bottom: 16px; }
+    strong { font-weight: 600; }
 
-  /* Main content */
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 80px 24px 120px;
-  }
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card h3 { margin-bottom: 8px; }
+    .card p:last-child { margin-bottom: 0; }
 
-  /* Sections */
-  .section {
-    display: none;
-    animation: fadeIn 0.4s ease;
-  }
+    /* Callouts */
+    .callout {
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      border-left: 3px solid;
+    }
+    .callout-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .callout-cyan {
+      background: var(--cyan-dim);
+      border-color: var(--cyan);
+    }
+    .callout-cyan .callout-label { color: var(--cyan); }
+    .callout-green {
+      background: var(--green-dim);
+      border-color: var(--green);
+    }
+    .callout-green .callout-label { color: var(--green); }
+    .callout-amber {
+      background: var(--amber-dim);
+      border-color: var(--amber);
+    }
+    .callout-amber .callout-label { color: var(--amber); }
+    .callout-red {
+      background: var(--red-dim);
+      border-color: var(--red);
+    }
+    .callout-red .callout-label { color: var(--red); }
 
-  .section.active { display: block; }
+    /* Code blocks */
+    .code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      line-height: 1.8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    /* Steps */
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--cyan-dim);
+      border: 1px solid rgba(34,211,238,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan);
+      margin-top: 2px;
+    }
+    .step-content { flex: 1; }
+    .step-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .step-content p { font-size: 14px; color: var(--text-dim); margin-bottom: 0; }
 
-  /* Section header */
-  .section-number {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--cyan);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
+    /* Architecture diagram */
+    .arch-diagram {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      white-space: pre;
+    }
 
-  .section h1 {
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    line-height: 1.2;
-    margin-bottom: 8px;
-  }
+    /* Rules list */
+    .rule {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .rule:last-child { border-bottom: none; }
+    .rule-arrow {
+      color: var(--cyan);
+      margin-right: 8px;
+      font-family: var(--font-mono);
+    }
 
-  .section-subtitle {
-    font-size: 15px;
-    color: var(--dim);
-    margin-bottom: 32px;
-    line-height: 1.6;
-  }
+    /* Checklist */
+    .check-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-icon {
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      color: var(--text-faint);
+      font-size: 14px;
+      margin-top: 1px;
+    }
 
-  /* Cards */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 16px;
-  }
+    /* Tool grid */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 520px) {
+      .tool-grid { grid-template-columns: 1fr; }
+    }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .tool-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .tool-card .tool-role {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .tool-card p { font-size: 13px; color: var(--text-dim); margin: 0; }
 
-  .card-accent {
-    border-left: 3px solid var(--cyan);
-  }
+    /* Hierarchy */
+    .hierarchy {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .hierarchy-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-weight: 500;
+    }
+    .hierarchy-arrow {
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+    }
 
-  .card-green { border-left-color: var(--green); }
-  .card-purple { border-left-color: var(--purple); }
-  .card-amber { border-left-color: var(--amber); }
-  .card-pink { border-left-color: var(--pink); }
-  .card-blue { border-left-color: var(--blue); }
+    /* Table */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .info-table th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-active);
+    }
+    .info-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .info-table td:first-child { font-weight: 500; color: var(--text); }
+    .info-table td:last-child { color: var(--text-dim); }
 
-  .card h3 {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
+    /* Nav */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+      gap: 12px;
+    }
+    .btn {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--cyan);
+      color: var(--bg);
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--border-active);
+      color: var(--text);
+    }
 
-  .card p, .card li {
-    font-size: 14px;
-    color: var(--dim);
-    line-height: 1.7;
-  }
+    .spacer { height: 12px; }
 
-  .card ul { padding-left: 20px; margin-top: 8px; }
-  .card li { margin-bottom: 4px; }
-
-  /* Diagram box */
-  .diagram {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1.6;
-    color: var(--dim);
-    white-space: pre;
-    overflow-x: auto;
-    margin: 16px 0;
-  }
-
-  /* Code blocks */
-  .code {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    line-height: 1.7;
-    color: var(--dim);
-    white-space: pre-wrap;
-    margin: 12px 0;
-    overflow-x: auto;
-  }
-
-  .code .comment { color: var(--muted); }
-  .code .highlight { color: var(--cyan); }
-  .code .string { color: var(--green); }
-
-  /* Callout */
-  .callout {
-    background: var(--cyan-dim);
-    border: 1px solid rgba(34,211,238,0.15);
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin: 16px 0;
-  }
-
-  .callout-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--cyan);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .callout p { font-size: 13px; color: var(--dim); line-height: 1.6; }
-
-  .callout-green { background: var(--green-dim); border-color: rgba(16,185,129,0.15); }
-  .callout-green .callout-label { color: var(--green); }
-  .callout-purple { background: var(--purple-dim); border-color: rgba(167,139,250,0.15); }
-  .callout-purple .callout-label { color: var(--purple); }
-  .callout-amber { background: var(--amber-dim); border-color: rgba(251,191,36,0.15); }
-  .callout-amber .callout-label { color: var(--amber); }
-  .callout-pink { background: var(--pink-dim); border-color: rgba(244,114,182,0.15); }
-  .callout-pink .callout-label { color: var(--pink); }
-
-  /* Steps */
-  .step {
-    display: flex;
-    gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .step:last-child { border-bottom: none; }
-
-  .step-number {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--cyan-dim);
-    border: 1px solid rgba(34,211,238,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--cyan);
-  }
-
-  .step-content h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .step-content p {
-    font-size: 13px;
-    color: var(--dim);
-    line-height: 1.6;
-  }
-
-  /* Tag */
-  .tag {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-  }
-
-  .tag-cyan { background: var(--cyan-dim); color: var(--cyan); }
-  .tag-green { background: var(--green-dim); color: var(--green); }
-  .tag-purple { background: var(--purple-dim); color: var(--purple); }
-  .tag-amber { background: var(--amber-dim); color: var(--amber); }
-  .tag-pink { background: var(--pink-dim); color: var(--pink); }
-  .tag-blue { background: var(--blue-dim); color: var(--blue); }
-
-  /* Table */
-  .table-wrap {
-    overflow-x: auto;
-    margin: 12px 0;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  th {
-    text-align: left;
-    padding: 10px 14px;
-    background: var(--surface2);
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-  }
-
-  td {
-    padding: 10px 14px;
-    color: var(--dim);
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* Navigation buttons */
-  .nav-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-  }
-
-  .btn {
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-family: 'Inter', 'Circular Std', -apple-system, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-  }
-
-  .btn-primary {
-    background: #1C1E26;
-    color: #FFFFFF;
-  }
-
-  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-
-  .btn-secondary {
-    background: var(--surface);
-    color: var(--dim);
-    border: 1px solid var(--border);
-  }
-
-  .btn-secondary:hover { border-color: #1C1E26; color: #1C1E26; }
-
-  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-
-  /* Spacer */
-  .spacer { height: 24px; }
-
-  /* Emphasis */
-  strong { color: var(--text); font-weight: 600; }
-  em { color: var(--cyan); font-style: normal; font-weight: 500; }
-
-  /* Flow diagram */
-  .flow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-
-  .flow-box {
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-    min-width: 120px;
-  }
-
-  .flow-arrow {
-    color: var(--muted);
-    font-size: 18px;
-  }
-
-  /* Checklist */
-  .checklist { margin: 12px 0; }
-  .check-item {
-    display: flex;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(42,42,58,0.5);
-    font-size: 13px;
-    color: var(--dim);
-  }
-  .check-item:last-child { border-bottom: none; }
-  .check-icon { color: var(--cyan); flex-shrink: 0; }
-
-  /* Comparison */
-  .compare {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin: 16px 0;
-  }
-
-  @media (max-width: 600px) {
-    .compare { grid-template-columns: 1fr; }
-    .flow { flex-direction: column; }
-    .flow-arrow { transform: rotate(90deg); }
-  }
-</style>
+    /* Session structure items */
+    .session-part {
+      display: flex;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 14px;
+      align-items: baseline;
+    }
+    .session-part .part-badge {
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .part-learn {
+      background: var(--purple-dim);
+      color: var(--purple);
+    }
+    .part-setup {
+      background: var(--green-dim);
+      color: var(--green);
+    }
+  </style>
 </head>
 <body>
 
-<!-- Navigation -->
-<nav class="nav">
-  <div class="nav-title">THE HARNESS FRAMEWORK</div>
-  <div class="nav-progress">
-    <div class="nav-dot active" onclick="goTo(0)"></div>
-    <div class="nav-dot" onclick="goTo(1)"></div>
-    <div class="nav-dot" onclick="goTo(2)"></div>
-    <div class="nav-dot" onclick="goTo(3)"></div>
-    <div class="nav-dot" onclick="goTo(4)"></div>
-    <div class="nav-dot" onclick="goTo(5)"></div>
-    <div class="nav-dot" onclick="goTo(6)"></div>
-    <div class="nav-dot" onclick="goTo(7)"></div>
-    <div class="nav-dot" onclick="goTo(8)"></div>
-    <div class="nav-dot" onclick="goTo(9)"></div>
-    <div class="nav-dot" onclick="goTo(10)"></div>
-    <div class="nav-dot" onclick="goTo(11)"></div>
-    <span class="nav-counter">1 / 12</span>
-  </div>
-</nav>
-
-<div class="container">
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 0: WELCOME -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section active" id="s0">
-    <div class="section-number">Welcome</div>
-    <h1>The Harness Framework</h1>
-    <p class="section-subtitle">
-      A system for getting AI to build production software — without you being the bottleneck.
-    </p>
-
-    <div class="card card-accent">
-      <h3>What we're covering today</h3>
-      <p>By the end of this session, you'll have a fully working setup where:</p>
-      <ul>
-        <li>You describe what you want to build in <em>Claude Chat</em></li>
-        <li>Claude Chat creates structured task cards in <em>Linear</em></li>
-        <li><em>Claude Code</em> reads those cards and builds them autonomously</li>
-        <li>You review the output and deploy</li>
-      </ul>
-      <div class="spacer"></div>
-      <p>The key insight: <strong>Linear becomes the shared memory between you, Claude Chat, and Claude Code.</strong> Without it, every AI session starts from zero. With it, context persists across sessions, tools, and projects.</p>
-    </div>
-
-    <div class="callout">
-      <div class="callout-label">Session structure</div>
-      <p><strong>Part 1:</strong> Why Claude — what changes and why (5 min)<br>
-      <strong>Part 2:</strong> Claude Code — what it is and how it works (5 min)<br>
-      <strong>Part 3:</strong> Setting up Linear — your new project board (5 min)<br>
-      <strong>Part 4:</strong> The philosophy — why this system works (10 min)<br>
-      <strong>Part 5:</strong> Linear as AI memory — cards as prompts (10 min)<br>
-      <strong>Part 6:</strong> Antigravity — the IDE that connects everything (5 min)<br>
-      <strong>Part 7:</strong> Connecting the MCPs (10 min)<br>
-      <strong>Part 8:</strong> Creating cards that work as prompts (10 min)<br>
-      <strong>Part 9:</strong> Hooks — automated guardrails (5 min)<br>
-      <strong>Part 10:</strong> CLAUDE.md — project instructions (5 min)<br>
-      <strong>Part 11:</strong> Hands-on — set up your workspace (10 min)</p>
-    </div>
-
-    <div class="callout callout-green">
-      <div class="callout-label">Note</div>
-      <p>We may not get through everything today — that's fine. The key is understanding the philosophy and getting your core tools set up. We can complete the hands-on setup in a follow-up session.</p>
-    </div>
-
-    <div class="nav-buttons">
-      <div></div>
-      <button class="btn btn-primary" onclick="next()">Let's go →</button>
+  <!-- Progress bar -->
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <span class="progress-label">The Harness Framework</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-count" id="progressCount">1 / 10</span>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 1: WHY CLAUDE -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s1">
-    <div class="section-number">Part 1</div>
-    <h1>Why Claude?</h1>
-    <p class="section-subtitle">You're already using Gemini effectively. Here's why we're adding Claude to the toolkit — and what it unlocks.</p>
+  <div class="container" style="padding-top: 72px;">
 
-    <div class="card card-accent">
-      <h3>This isn't about replacing Gemini</h3>
-      <p>Gemini is a capable AI tool. But the system we've built — the Harness Framework — is designed around Claude's specific capabilities. The two key things Claude has that make this work:</p>
-      <ul>
-        <li><strong>MCP (Model Context Protocol)</strong> — Claude can directly read and write to tools like Linear, Google Drive, and GitHub. This means Claude Chat can create task cards, and Claude Code can read them and update their status — all without you copying and pasting anything.</li>
-        <li><strong>Claude Code</strong> — a dedicated coding agent that lives in your terminal or IDE. It reads files, writes code, runs tests, and interacts with Linear. It's separate from Claude Chat (the conversational AI), and that separation is what creates quality.</li>
-      </ul>
-    </div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 0: Welcome -->
+    <!-- ============================================================ -->
+    <div class="slide active" id="slide-0">
+      <h2>Welcome</h2>
+      <h1>The Harness Framework</h1>
+      <p>A system for getting AI to build production software — without you being the bottleneck.</p>
 
-    <div class="card">
-      <h3>What changes in your workflow</h3>
-      <div class="compare">
-        <div class="card" style="margin: 0; border-left: 3px solid var(--muted);">
-          <div style="font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 8px;">BEFORE (Gemini)</div>
-          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
-            You describe what you want → Gemini helps → you manually track progress → next session starts from zero → you re-explain context
-          </div>
+      <div class="card">
+        <h3>What you'll have by the end</h3>
+        <p>A fully working setup where:</p>
+        <p>→ You describe what you want to build in <strong>Claude Chat</strong><br>
+        → Claude Chat creates structured task cards in <strong>Linear</strong><br>
+        → <strong>Claude Code</strong> reads those cards and builds them autonomously<br>
+        → You review the output and deploy</p>
+        <p style="margin-bottom:0;">The key insight: <strong>Linear becomes the shared memory between you, Claude Chat, and Claude Code.</strong> Without it, every AI session starts from zero. With it, context persists across sessions, tools, and projects.</p>
+      </div>
+
+      <div class="card">
+        <h3>How this guide works</h3>
+        <p style="margin-bottom: 12px;">This guide has two parts. Each section is clearly labelled so you always know whether you're <em>learning</em> or <em>doing</em>.</p>
+
+        <div class="session-part">
+          <span class="part-badge part-learn">Learn</span>
+          <span>The philosophy, architecture, and how the pieces fit together</span>
         </div>
-        <div class="card" style="margin: 0; border-left: 3px solid var(--green);">
-          <div style="font-size: 11px; color: var(--green); font-weight: 700; margin-bottom: 8px;">AFTER (The Harness)</div>
-          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
-            You describe what you want → Claude Chat creates cards in Linear → Claude Code reads cards and builds → Linear remembers everything → next session picks up where you left off
-          </div>
+        <div class="session-part">
+          <span class="part-badge part-learn">Learn</span>
+          <span>The tools — Claude Chat, Claude Code, Linear, Antigravity</span>
         </div>
+        <div class="session-part">
+          <span class="part-badge part-learn">Learn</span>
+          <span>How Linear works as AI memory, not just task management</span>
+        </div>
+        <div style="height: 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px;"></div>
+        <div class="session-part">
+          <span class="part-badge part-setup">Setup</span>
+          <span>Accounts, downloads, and prerequisites</span>
+        </div>
+        <div class="session-part">
+          <span class="part-badge part-setup">Setup</span>
+          <span>Connecting MCPs and configuring your workspace</span>
+        </div>
+        <div class="session-part">
+          <span class="part-badge part-setup">Setup</span>
+          <span>Claude Chat project, Claude Code, hooks, and your first run</span>
+        </div>
+      </div>
+
+      <div class="callout callout-cyan">
+        <div class="callout-label">Note</div>
+        <p style="margin:0;">We may not get through everything in one sitting — that's fine. The key is understanding the philosophy and getting your core tools set up. We can complete the hands-on setup in a follow-up session.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <div></div>
+        <button class="btn btn-primary" onclick="next()">Let's go →</button>
       </div>
     </div>
 
-    <div class="card">
-      <h3>The tools you'll be using</h3>
-      <div class="checklist">
-        <div class="check-item"><span class="check-icon">→</span> <strong>Claude Chat</strong> (claude.ai) — the strategist. You already know this one. It plans, writes specs, and creates task cards.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Claude Code</strong> — the builder. A coding agent that runs in your IDE. It reads task cards from Linear and writes the code.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Linear</strong> — the shared memory. A project management tool that both Claude Chat and Claude Code can read and write to.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Antigravity</strong> — the IDE. A VS Code fork with built-in AI agent support and MCP connections.</div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 1: The Philosophy -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-1">
+      <span class="section-badge badge-learn"><span class="badge-dot"></span> Understand</span>
+      <h2>The Philosophy</h2>
+      <h1>Why most people hit a ceiling with AI — and how to break through it</h1>
+
+      <div class="card">
+        <h3>The problem with AI tools alone</h3>
+        <p>Whether you're using Claude Chat, ChatGPT, or any other AI tool, you've probably noticed:</p>
+        <p>→ Every new session starts from zero — it doesn't remember what you did yesterday<br>
+        → Complex projects drift — the AI loses track of the big picture<br>
+        → You become a relay station — copying context between sessions<br>
+        → Quality is inconsistent — sometimes it skips steps, cuts corners, or goes off-brief</p>
+        <p style="margin-bottom:0;">The Harness solves this by adding <strong>two things</strong> around your AI tools: a strategy layer and a memory layer.</p>
       </div>
-    </div>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Claude Code →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 2: WHAT IS CLAUDE CODE -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s2">
-    <div class="section-number">Part 2</div>
-    <h1>What is Claude Code?</h1>
-    <p class="section-subtitle">You know Claude Chat — the conversational AI. Claude Code is its counterpart for building things.</p>
-
-    <div class="card card-accent">
-      <h3>Claude Chat vs Claude Code</h3>
-      <div class="compare">
-        <div class="card" style="margin: 0; border-left: 3px solid var(--blue);">
-          <div style="font-size: 11px; color: var(--blue); font-weight: 700; margin-bottom: 8px;">CLAUDE CHAT</div>
-          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
-            Conversational AI at claude.ai<br>
-            Good at: strategy, planning, writing, analysis<br>
-            Creates: documents, specs, task cards<br>
-            Lives in: your browser
-          </div>
-        </div>
-        <div class="card" style="margin: 0; border-left: 3px solid var(--green);">
-          <div style="font-size: 11px; color: var(--green); font-weight: 700; margin-bottom: 8px;">CLAUDE CODE</div>
-          <div style="font-size: 13px; color: var(--dim); line-height: 1.7;">
-            Coding agent that runs in your IDE<br>
-            Good at: writing code, running tests, file management<br>
-            Creates: code, tests, deployments<br>
-            Lives in: Antigravity (your IDE)
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>How Claude Code works</h3>
-      <p>Claude Code sits inside your IDE (Antigravity) as a panel. You give it an instruction — either by typing directly or by pointing it at a Linear card — and it:</p>
-      <ul>
-        <li>Reads your project files to understand the codebase</li>
-        <li>Writes code based on the instruction</li>
-        <li>Runs tests to verify its work</li>
-        <li>Fixes any issues it finds</li>
-        <li>Reports back when it's done</li>
-      </ul>
-      <div class="spacer"></div>
-      <p>The key difference from asking Claude Chat to write code: <strong>Claude Code actually sees your files, runs your tests, and modifies your project directly.</strong> Claude Chat just gives you text to copy-paste.</p>
-    </div>
-
-    <div class="callout callout-green">
-      <div class="callout-label">You don't need to be technical</div>
-      <p>Claude Code does the technical work. Your job is to give it clear instructions (which is what the card system is for) and review the output. You're the director, not the coder.</p>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Setting up Linear →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 3: SETTING UP LINEAR -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s3">
-    <div class="section-number">Part 3</div>
-    <h1>Setting Up Linear</h1>
-    <p class="section-subtitle">Linear is where everything connects. Let's get you set up.</p>
-
-    <div class="card card-accent">
-      <h3>What is Linear?</h3>
-      <p>Linear is a project management tool — think of it like a smart task board. But in the Harness, it serves a bigger purpose: it's the <strong>shared memory</strong> between you, Claude Chat, and Claude Code. When Claude Chat creates a task card, Claude Code can read it. When Claude Code finishes a task, it updates the card. Everything stays in sync without you having to relay information.</p>
-    </div>
-
-    <div class="card">
-      <h3>Getting started</h3>
-      <div class="step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h4>Create your account</h4>
-          <p>Go to <strong>linear.app</strong> and sign up. The free plan supports up to 250 issues — more than enough to get started.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h4>Create a workspace</h4>
-          <p>Name it something relevant — your team name or your own name. This is your top-level container.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h4>Create a team</h4>
-          <p>Inside the workspace, create a team (e.g. "GTM"). Teams are groups of related work.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h4>Create your first project</h4>
-          <p>Inside the team, create a project for whatever you're building first. This is where your task cards will live.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>The hierarchy</h3>
-      <div class="flow">
-        <div class="flow-box" style="background: var(--cyan-dim); color: var(--cyan);">Workspace</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background: var(--blue-dim); color: var(--blue);">Team</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background: var(--green-dim); color: var(--green);">Project</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background: var(--amber-dim); color: var(--amber);">Cards</div>
-      </div>
-      <p>Cards are the units of work. Each card has a description, labels, dependencies, and status. In the Harness, cards are the instructions that Claude Code reads and executes.</p>
-    </div>
-
-    <div class="callout">
-      <div class="callout-label">We'll do this together</div>
-      <p>Don't worry about getting everything perfect now. We'll set up your Linear account and first project together during the hands-on section at the end.</p>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: The Philosophy →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 4: THE PHILOSOPHY (was section 1) -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s4">
-    <div class="section-number">Part 4</div>
-    <h1>The Philosophy</h1>
-    <p class="section-subtitle">Why most people hit a ceiling with AI — and how to break through it.</p>
-
-    <div class="card">
-      <h3>The problem with AI tools alone</h3>
-      <p>Whether you're using Gemini, Claude Chat, or any other AI tool, you've probably noticed:</p>
-      <ul>
-        <li>Every new session starts from zero — it doesn't remember what you did yesterday</li>
-        <li>Complex projects drift — the AI loses track of the big picture</li>
-        <li>You become a relay station — copying context between sessions</li>
-        <li>Quality is inconsistent — sometimes it skips tests, cuts corners, or goes off-brief</li>
-      </ul>
-      <div class="spacer"></div>
-      <p>The Harness solves this by adding <strong>two things</strong> around your AI tools: a strategy layer and a memory layer.</p>
-    </div>
-
-    <div class="card">
       <h3>Three-Layer Architecture</h3>
-      <div class="diagram">┌─────────────────────────────────────────────────────┐
-│                  THE HARNESS                         │
+
+      <div class="arch-diagram">┌─────────────────────────────────────────────────────┐
+│                  THE HARNESS                        │
 │                                                     │
-│  ┌──────────┐   ┌──────────────┐   ┌────────────┐  │
-│  │  YOU      │──▶│ CLAUDE CHAT  │   │CLAUDE CODE │  │
-│  │          │   │ (Strategist) │   │ (Builder)  │  │
-│  │ • Ideas  │   │ • Planning   │   │ • Code     │  │
-│  │ • Review │   │ • Cards      │   │ • Tests    │  │
-│  │ • Deploy │   │ • Specs      │   │ • Chaining │  │
-│  └──────────┘   └──────┬───────┘   └─────┬──────┘  │
-│                        │                  │         │
-│                 ┌──────┴──────────────────┴──────┐  │
-│                 │    LINEAR (Shared Memory)       │  │
-│                 │  Cards │ Docs │ Status │ Deps   │  │
-│                 └────────────────────────────────┘  │
+│  ┌──────────┐  ┌──────────────┐  ┌────────────┐    │
+│  │   YOU    │─▶│ CLAUDE CHAT  │  │CLAUDE CODE │    │
+│  │          │  │ (Strategist) │  │ (Builder)  │    │
+│  │ • Ideas  │  │ • Planning   │  │ • Code     │    │
+│  │ • Review │  │ • Cards      │  │ • Tests    │    │
+│  │ • Deploy │  │ • Specs      │  │ • Chaining │    │
+│  └──────────┘  └──────┬───────┘  └─────┬──────┘    │
+│                       │                │            │
+│          ┌────────────┴────────────────┴──────┐     │
+│          │     LINEAR (Shared Memory)         │     │
+│          │   Cards │ Docs │ Status │ Deps     │     │
+│          └────────────────────────────────────┘     │
 └─────────────────────────────────────────────────────┘</div>
+
       <p><strong>You</strong> generate ideas, make decisions, review output.<br>
       <strong>Claude Chat</strong> does strategy — planning, specs, creating task cards.<br>
       <strong>Claude Code</strong> does execution — reads cards, writes code, runs tests.<br>
       <strong>Linear</strong> is the shared memory that connects them all.</p>
-    </div>
 
-    <div class="callout callout-pink">
-      <div class="callout-label">Core principle</div>
-      <p><strong>Claude Chat creates. Claude Code executes. Linear remembers.</strong> Never mix the roles. The strategy layer does the thinking, the build layer does the doing. The separation is what creates quality.</p>
-    </div>
+      <div class="callout callout-cyan">
+        <div class="callout-label">Core principle</div>
+        <p style="margin:0;"><strong>Claude Chat creates. Claude Code executes. Linear remembers.</strong> Never mix the roles. The strategy layer does the thinking, the build layer does the doing. The separation is what creates quality.</p>
+      </div>
 
-    <div class="card">
       <h3>The rules</h3>
-      <div class="checklist">
-        <div class="check-item"><span class="check-icon">→</span> <strong>Don't let Claude push work back to you.</strong> If it says "you'll need to manually…" — stop and say "no, you do it."</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Cards are the prompt.</strong> Don't write prompts separately. Write a good Linear card and tell Claude Code to read it.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Linear is persistent memory.</strong> It's not just task tracking — it's how AI remembers across sessions.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Use APIs/CLIs over UIs.</strong> Anything the AI can do programmatically, it should.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>Anything done 3x becomes a hook.</strong> If you keep telling the AI the same thing, automate it.</div>
-        <div class="check-item"><span class="check-icon">→</span> <strong>One kickoff prompt, not twenty.</strong> Claude Code chains through cards autonomously.</div>
+      <div class="card" style="padding: 8px 24px;">
+        <div class="rule"><span class="rule-arrow">→</span> <strong>Don't let Claude push work back to you.</strong> If it says "you'll need to manually…" — stop and say "no, you do it."</div>
+        <div class="rule"><span class="rule-arrow">→</span> <strong>Cards are the prompt.</strong> Don't write prompts separately. Write a good Linear card and tell Claude Code to read it.</div>
+        <div class="rule"><span class="rule-arrow">→</span> <strong>Linear is persistent memory.</strong> It's not just task tracking — it's how AI remembers across sessions.</div>
+        <div class="rule"><span class="rule-arrow">→</span> <strong>Use APIs/CLIs over UIs.</strong> Anything the AI can do programmatically, it should.</div>
+        <div class="rule"><span class="rule-arrow">→</span> <strong>Anything done 3x becomes a hook.</strong> If you keep telling the AI the same thing, automate it.</div>
+        <div class="rule"><span class="rule-arrow">→</span> <strong>One kickoff prompt, not twenty.</strong> Claude Code chains through cards autonomously.</div>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: The Tools →</button>
       </div>
     </div>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Linear →</button>
+    <!-- ============================================================ -->
+    <!-- SLIDE 2: The Tools -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-2">
+      <span class="section-badge badge-learn"><span class="badge-dot"></span> Understand</span>
+      <h2>The Tools</h2>
+      <h1>Four tools, each with a specific role</h1>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-role">The Strategist</div>
+          <h4>Claude Chat</h4>
+          <p>Conversational AI at claude.ai. Plans, writes specs, and creates task cards in Linear. Lives in your browser.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-role">The Builder</div>
+          <h4>Claude Code</h4>
+          <p>Coding agent that runs in your terminal. Reads Linear cards, writes code, runs tests, and chains through tasks autonomously.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-role">The Memory</div>
+          <h4>Linear</h4>
+          <p>Project management tool that both Claude Chat and Claude Code can read and write to. The shared memory that persists across sessions.</p>
+        </div>
+        <div class="tool-card">
+          <div class="tool-role">The Environment</div>
+          <h4>Antigravity</h4>
+          <p>A VS Code fork with native MCP support. Where your files live and where Claude Code runs in the terminal.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Claude Chat vs Claude Code</h3>
+        <p>This is the most important distinction. Claude Chat (the browser AI) is the <strong>strategist</strong> — it plans, creates cards, and makes decisions. Claude Code is the <strong>builder</strong> — it reads those cards, writes actual code in your project, runs tests, and modifies files directly.</p>
+        <p>The key difference: <strong>Claude Code actually sees your files, runs your tests, and modifies your project.</strong> Claude Chat just gives you text. Keeping them separated is what makes the system reliable.</p>
+        <p style="margin-bottom:0;">You don't need to be technical. Claude Code does the technical work. Your job is to give it clear instructions (which is what the card system is for) and review the output. You're the director, not the coder.</p>
+      </div>
+
+      <div class="card">
+        <h3>How they connect</h3>
+        <p>MCP (Model Context Protocol) is the glue. It lets Claude Chat and Claude Code both talk to Linear programmatically — reading cards, updating status, creating new cards. No copy-pasting. No context loss.</p>
+        <p style="margin-bottom:0;">Think of MCP as giving your AI tools login credentials to your project board. We'll set this up in the setup section.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Linear as AI Memory →</button>
+      </div>
     </div>
-  </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 2: LINEAR -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s5">
-    <div class="section-number">Part 5</div>
-    <h1>Linear — AI Memory, Not Just Task Management</h1>
-    <p class="section-subtitle">You might know Linear as a project management tool. In the Harness, it's something more.</p>
+    <!-- ============================================================ -->
+    <!-- SLIDE 3: Linear as AI Memory -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-3">
+      <span class="section-badge badge-learn"><span class="badge-dot"></span> Understand</span>
+      <h2>Linear as AI Memory</h2>
+      <h1>Cards are prompts, not to-do items</h1>
 
-    <div class="card card-accent">
-      <h3>Why Linear specifically?</h3>
-      <p>Linear has an MCP (Model Context Protocol) integration, which means both Claude Chat and Claude Code can read and write to it programmatically. This is the key differentiator — your AI tools can directly access your project board, read card descriptions, update statuses, and leave comments. No copy-pasting. No context loss.</p>
-      <div class="spacer"></div>
-      <p>Other tools (Jira, Notion, Trello) could theoretically work, but Linear's MCP is the most mature and it's fast. Speed matters when the AI is reading dozens of cards per session.</p>
-    </div>
+      <p>This is the biggest mental shift. A Linear card isn't just a task — it's a <strong>self-contained instruction set</strong> for Claude Code. The better the card, the more autonomously Claude Code can execute.</p>
 
-    <div class="card">
-      <h3>How Linear works (quick primer)</h3>
-      <p>If you haven't used Linear before, here's what matters:</p>
-      <ul>
-        <li><strong>Workspace</strong> — your top-level account (e.g. "Ailo" or your personal workspace)</li>
-        <li><strong>Teams</strong> — groups within a workspace (e.g. "GTM", "Engineering")</li>
-        <li><strong>Projects</strong> — a collection of related work (e.g. "Ailo Access Demo", "Data Enrichment")</li>
-        <li><strong>Issues (Cards)</strong> — individual units of work with descriptions, labels, status, and dependencies</li>
-        <li><strong>Documents</strong> — long-form docs that live inside a project (e.g. the Harness Framework doc itself)</li>
-      </ul>
-      <div class="spacer"></div>
-      <p>The hierarchy is: <strong>Workspace → Team → Project → Cards + Docs</strong></p>
-    </div>
+      <div class="card">
+        <h3>The Linear hierarchy</h3>
+        <div class="hierarchy">
+          <span class="hierarchy-item">Workspace</span>
+          <span class="hierarchy-arrow">→</span>
+          <span class="hierarchy-item">Team</span>
+          <span class="hierarchy-arrow">→</span>
+          <span class="hierarchy-item">Project</span>
+          <span class="hierarchy-arrow">→</span>
+          <span class="hierarchy-item">Cards</span>
+        </div>
+        <p style="font-size:14px; color: var(--text-dim); margin:0;"><strong>Workspace</strong> — your top-level account. <strong>Teams</strong> — groups within a workspace. <strong>Projects</strong> — a collection of related work. <strong>Cards (Issues)</strong> — individual units of work with descriptions, labels, status, and dependencies. <strong>Documents</strong> — long-form docs that live inside a project.</p>
+      </div>
 
-    <div class="card">
-      <h3>Cards as prompts</h3>
-      <p>This is the biggest mental shift. A Linear card isn't just a to-do item — it's a <strong>self-contained instruction set</strong> for Claude Code. Every card should have:</p>
-      <div class="spacer"></div>
-      <div class="table-wrap">
-        <table>
+      <div class="card">
+        <h3>What goes in a card</h3>
+        <p>Claude Chat creates these for you — you describe what you want and it writes properly structured cards. But here's what each card contains:</p>
+        <table class="info-table">
           <tr><th>Field</th><th>What it does</th></tr>
-          <tr><td><strong>Context</strong></td><td>Why this card exists, what it connects to</td></tr>
-          <tr><td><strong>Requirements</strong></td><td>Specific, implementable specs — not vague goals</td></tr>
-          <tr><td><strong>Dependencies</strong></td><td>Which cards must be done first (set via blocking relationships)</td></tr>
-          <tr><td><strong>Definition of Done</strong></td><td>How Claude Code knows it's finished</td></tr>
-          <tr><td><strong>Label</strong></td><td>Agent, Claude Chat, or Manual — who executes this card</td></tr>
+          <tr><td>Context</td><td>Why this card exists, what it connects to in the broader project</td></tr>
+          <tr><td>Requirements</td><td>Specific, implementable specs — not vague goals</td></tr>
+          <tr><td>Dependencies</td><td>Which cards must be done first (set via blocking relationships)</td></tr>
+          <tr><td>Definition of Done</td><td>How Claude Code knows it's finished</td></tr>
+          <tr><td>Label</td><td>Agent, Claude Chat, or Manual — who executes this card</td></tr>
         </table>
+        <p style="margin-bottom:0; font-size:14px; color: var(--text-dim);">You don't need to write cards yourself. Claude Chat handles card creation, structuring, and quality. Your job is to describe what you want built clearly enough for Claude Chat to create good cards.</p>
       </div>
-      <div class="spacer"></div>
-      <p>If a card is underspecced, Claude Code will stall and ask questions. Then you're back to being a relay. <strong>Good cards = autonomous execution.</strong></p>
-    </div>
 
-    <div class="card">
-      <h3>The label system</h3>
-      <p>Every card gets exactly one label that determines who executes it:</p>
-      <div class="spacer"></div>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <span class="tag tag-blue">Agent</span>
-          <span style="color: var(--dim); font-size: 13px;">Claude Code builds it — code, tests, implementation</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <span class="tag tag-cyan">Claude Chat</span>
-          <span style="color: var(--dim); font-size: 13px;">Claude Chat handles it — specs, strategy, documents</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <span class="tag tag-amber">Manual</span>
-          <span style="color: var(--dim); font-size: 13px;">You do it — screenshots, meetings, visual review, deployment</span>
-        </div>
+      <div class="card">
+        <h3>The label system</h3>
+        <p>Every card gets exactly one label that determines who executes it:</p>
+        <table class="info-table">
+          <tr><th>Label</th><th>Who executes</th></tr>
+          <tr><td style="color: var(--cyan);">Agent</td><td>Claude Code builds it — code, tests, implementation</td></tr>
+          <tr><td style="color: var(--purple);">Claude Chat</td><td>Claude Chat handles it — specs, strategy, documents</td></tr>
+          <tr><td style="color: var(--amber);">Manual</td><td>You do it — screenshots, meetings, visual review, deployment</td></tr>
+        </table>
+        <p style="margin-bottom:0; font-size:14px; color: var(--text-dim);">Claude Code only picks up Agent cards. It skips everything else. If an Agent card is blocked by a Manual card that isn't done, it moves to the next unblocked card.</p>
       </div>
-      <div class="spacer"></div>
-      <p>Claude Code only picks up <span class="tag tag-blue">Agent</span> cards. It skips everything else. If an Agent card is blocked by a Manual card that isn't done, it moves to the next unblocked card.</p>
+
+      <div class="card">
+        <h3>The dependency graph</h3>
+        <p>Cards don't exist in isolation. Claude Chat sets up blocking relationships to create an execution order:</p>
+        <div class="hierarchy" style="margin-top: 8px;">
+          <span class="hierarchy-item">Project Setup</span>
+          <span class="hierarchy-arrow">→</span>
+          <span class="hierarchy-item">Data Model</span>
+          <span class="hierarchy-arrow">→</span>
+          <span class="hierarchy-item">Login Page</span>
+          <span class="hierarchy-arrow">→</span>
+          <span class="hierarchy-item">Dashboard</span>
+        </div>
+        <p style="margin-bottom:0; font-size:14px; color: var(--text-dim);">Claude Code reads these relationships and executes in order. You give it one kickoff prompt and it chains through the entire project.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Setup Starts →</button>
+      </div>
     </div>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Antigravity →</button>
-    </div>
-  </div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 4: Setup — Accounts & Downloads -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-4">
+      <span class="section-badge badge-setup"><span class="badge-dot"></span> Setup</span>
+      <h2>Accounts &amp; Downloads</h2>
+      <h1>Let's get everything installed</h1>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 3: ANTIGRAVITY -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s6">
-    <div class="section-number">Part 6</div>
-    <h1>Antigravity — Your IDE</h1>
-    <p class="section-subtitle">Why we use Antigravity instead of VS Code or Cursor.</p>
+      <p>Before we connect anything, you need four things set up on your machine. We'll go through each one.</p>
 
-    <div class="card card-accent">
-      <h3>What is Antigravity?</h3>
-      <p>Antigravity is a VS Code fork built specifically for AI-assisted development. It looks and feels like VS Code (same extensions, same shortcuts, same file tree), but it has native MCP support for connecting to tools like Linear. If you've used VS Code before, the switch is seamless.</p>
-    </div>
-
-    <div class="card card-pink">
-      <h3>Important: Claude Code runs in the Terminal, not the built-in panel</h3>
-      <p>Antigravity has its own built-in AI panel (bottom right). <strong>Do not use this</strong> — it uses Antigravity's own credits and is not Claude Code.</p>
-      <div class="spacer"></div>
-      <p>Claude Code runs in the <strong>Terminal</strong> inside Antigravity. Here's how to set it up:</p>
       <div class="step">
-        <div class="step-number">1</div>
+        <div class="step-num">1</div>
         <div class="step-content">
-          <h4>Open a terminal</h4>
-          <p>In Antigravity: <strong>Terminal → New Terminal</strong> (or press <code>Ctrl + `</code>)</p>
+          <h4>Node.js (prerequisite)</h4>
+          <p>Claude Code's MCP servers require Node.js to run. Download the <strong>LTS version</strong> from <strong>nodejs.org</strong> and install it. After installing, open a terminal and run <code style="font-family: var(--font-mono); font-size: 12px; background: var(--surface-raised); padding: 2px 6px; border-radius: 3px;">node --version</code> — you should see v18 or higher.</p>
         </div>
       </div>
+
       <div class="step">
-        <div class="step-number">2</div>
+        <div class="step-num">2</div>
         <div class="step-content">
-          <h4>Install Claude Code (one-time only)</h4>
-          <div class="code">npm install -g @anthropic-ai/claude-code</div>
+          <h4>Linear account</h4>
+          <p>Go to <strong>linear.app</strong> and sign up. The free plan supports up to 250 issues — more than enough to start. Create a workspace, then a team inside it (e.g. "GTM"), then a project inside the team.</p>
         </div>
       </div>
+
       <div class="step">
-        <div class="step-number">3</div>
+        <div class="step-num">3</div>
         <div class="step-content">
-          <h4>Launch Claude Code in dangerous mode</h4>
-          <div class="code">claude --dangerously-skip-permissions</div>
-          <p>This skips all confirmation prompts so Claude Code runs autonomously. Use this every time you start a session.</p>
+          <h4>Claude account</h4>
+          <p>You'll need a <strong>Claude Pro</strong> subscription (or higher) at <strong>claude.ai</strong>. This gives you access to both Claude Chat in the browser and Claude Code in the terminal. If you already have an account, make sure your subscription is active.</p>
         </div>
       </div>
+
       <div class="step">
-        <div class="step-number">4</div>
+        <div class="step-num">4</div>
         <div class="step-content">
-          <h4>First time: log in</h4>
-          <p>The first time you run <code>claude</code>, it will ask you to authenticate. Select <strong>"Claude account with subscription"</strong>, then <strong>"Login method 1"</strong>, and authorise in the browser.</p>
+          <h4>Antigravity (IDE)</h4>
+          <p>Download from <strong>anti-gravity.dev</strong>. Drag to Applications and open it. It looks and feels like VS Code — same extensions, same shortcuts, same file tree. If you've used VS Code before, the switch is seamless.</p>
         </div>
+      </div>
+
+      <div class="callout callout-amber">
+        <div class="callout-label">Important — Antigravity's built-in panel</div>
+        <p style="margin:0;">Antigravity has its own built-in AI panel (usually bottom right). <strong>Do not use this</strong> — it uses Antigravity's own credits and is not Claude Code. Claude Code runs in the <strong>Terminal</strong> inside Antigravity, which we'll set up in a later step.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Connecting MCPs →</button>
       </div>
     </div>
 
-    <div class="callout callout-green">
-      <div class="callout-label">Key concept</div>
-      <p>Antigravity is the <strong>environment</strong> (where your files and terminal live). Claude Code is the <strong>builder</strong> (runs in the terminal). Claude Chat is the <strong>strategist</strong> (runs in claude.ai). Linear is the <strong>memory</strong> (connects them all). Don't mix them up.</p>
-    </div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 5: Setup — Connecting the MCPs -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-5">
+      <span class="section-badge badge-setup"><span class="badge-dot"></span> Setup</span>
+      <h2>Connecting the MCPs</h2>
+      <h1>Wire Linear into your tools</h1>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Connecting MCPs →</button>
-    </div>
-  </div>
+      <p>MCP (Model Context Protocol) is how Claude Code and Claude Chat both talk to Linear. We need to connect it in two places: Antigravity (for Claude Code) and Claude Chat (for the strategist).</p>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 4: MCP SETUP -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s7">
-    <div class="section-number">Part 7</div>
-    <h1>Connecting the MCPs</h1>
-    <p class="section-subtitle">MCP (Model Context Protocol) is how Claude Code talks to Linear. Let's wire it up.</p>
+      <h3>Part A: Get your Linear API key</h3>
 
-    <div class="card card-accent">
-      <h3>What is MCP?</h3>
-      <p>MCP is a protocol that lets AI tools connect to external services. Instead of you copy-pasting a Linear card description into Claude Code, MCP lets Claude Code read the card directly. It can also update card status, leave comments, and create new cards — all programmatically.</p>
-      <div class="spacer"></div>
-      <p>Think of it as giving Claude Code login credentials to your Linear board.</p>
-    </div>
-
-    <div class="card">
-      <h3>Step 1: Get your Linear API key</h3>
       <div class="step">
-        <div class="step-number">1</div>
+        <div class="step-num">1</div>
         <div class="step-content">
-          <h4>Open Linear</h4>
-          <p>Go to <strong>linear.app</strong> in your browser</p>
+          <h4>Open Linear settings</h4>
+          <p>Go to <strong>linear.app</strong> → click your avatar (bottom left) → Settings → API → Personal API keys</p>
         </div>
       </div>
       <div class="step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h4>Navigate to Settings → API</h4>
-          <p>Click your avatar (bottom left) → Settings → API → Personal API keys</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-number">3</div>
+        <div class="step-num">2</div>
         <div class="step-content">
           <h4>Create a key</h4>
-          <p>Name it something like "Claude Code" and copy it. <strong>You'll only see it once.</strong></p>
+          <p>Name it something like "Claude Code" and copy it. <strong>You'll only see it once</strong> — save it somewhere safe (e.g. 1Password as a Secure Note).</p>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <h3>Step 2: Configure Antigravity</h3>
+      <h3>Part B: Configure Linear MCP in Antigravity</h3>
+
       <div class="step">
-        <div class="step-number">1</div>
+        <div class="step-num">1</div>
         <div class="step-content">
           <h4>Open MCP settings</h4>
-          <p>In Antigravity, go to <strong>Manage MCPs</strong> → click <strong>"View raw config"</strong></p>
+          <p>In Antigravity: press <strong>Cmd+Shift+P</strong> → type "MCP" → Manage MCP Servers → click <strong>"View raw config"</strong></p>
         </div>
       </div>
       <div class="step">
-        <div class="step-number">2</div>
+        <div class="step-num">2</div>
         <div class="step-content">
           <h4>Paste this config</h4>
-          <div class="code">{
+        </div>
+      </div>
+
+      <div class="code">{
   "mcpServers": {
     "linear": {
       "command": "npx",
       "args": ["-y", "mcp-linear"],
       "env": {
-        "LINEAR_API_KEY": "<span class="string">paste-your-key-here</span>"
+        "LINEAR_API_KEY": "lin_api_PASTE_YOUR_KEY_HERE"
       }
     }
   }
 }</div>
-        </div>
-      </div>
+
       <div class="step">
-        <div class="step-number">3</div>
+        <div class="step-num">3</div>
         <div class="step-content">
           <h4>Save and refresh</h4>
           <p>Save the file (Cmd+S), go back to Manage MCPs, click Refresh. The Linear server should appear.</p>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <h3>Step 3: Verify it works</h3>
-      <p>Open Claude Code in Antigravity and type:</p>
-      <div class="code"><span class="highlight">List all issues in the GTM team.</span></div>
+      <h3>Part C: Connect Linear MCP to Claude Chat</h3>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>In Claude Chat</h4>
+          <p>Go to <strong>claude.ai</strong> → Settings → Connectors → Browse → search "Linear" → Connect. Ask an org admin to enable it if needed. This lets the strategist create and read cards directly.</p>
+        </div>
+      </div>
+
+      <h3>Verify it works</h3>
+      <p>Open Claude Code in Antigravity's terminal and type:</p>
+      <div class="code">List all issues in the [your team name] team.</div>
       <p>If it returns your Linear cards, the MCP is connected. If it errors, check your API key is correct and the config file has no syntax errors.</p>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Claude Chat Project →</button>
+      </div>
     </div>
 
-    <div class="callout callout-purple">
-      <div class="callout-label">Claude Chat MCP</div>
-      <p>Claude Chat (claude.ai) also has Linear MCP — it's configured in the Project settings, not in Antigravity. When you set up your Claude Chat project, connect Linear there too. This lets the strategist create and read cards directly.</p>
-    </div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 6: Setup — Claude Chat Project -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-6">
+      <span class="section-badge badge-setup"><span class="badge-dot"></span> Setup</span>
+      <h2>Claude Chat Project</h2>
+      <h1>Set up the strategist</h1>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Creating cards →</button>
-    </div>
-  </div>
+      <p>Claude Chat needs a project with custom instructions so it knows to work within the Harness Framework. This is what turns general-purpose Claude into your strategist.</p>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 5: CREATING CARDS -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s8">
-    <div class="section-number">Part 8</div>
-    <h1>Creating Cards That Work as Prompts</h1>
-    <p class="section-subtitle">The quality of your cards determines whether Claude Code can work autonomously or keeps asking you questions.</p>
-
-    <div class="card">
-      <h3>A bad card vs a good card</h3>
-      <div class="compare">
-        <div class="card" style="border-left: 3px solid #ef4444; margin: 0;">
-          <div style="font-size: 11px; color: #ef4444; font-weight: 700; margin-bottom: 8px;">❌ BAD CARD</div>
-          <div style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">Build the login page</div>
-          <div style="font-size: 12px; color: var(--muted);">Make it look nice and work with our auth system.</div>
-        </div>
-        <div class="card" style="border-left: 3px solid var(--green); margin: 0;">
-          <div style="font-size: 11px; color: var(--green); font-weight: 700; margin-bottom: 8px;">✓ GOOD CARD</div>
-          <div style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">Build login page with Supabase Auth</div>
-          <div style="font-size: 12px; color: var(--dim); line-height: 1.6;">
-            <strong>Context:</strong> First screen users see. Must handle email/password login via Supabase Auth.<br>
-            <strong>Requirements:</strong> Email + password fields, error states, redirect to /dashboard on success, "forgot password" link.<br>
-            <strong>Tech:</strong> React + Tailwind, use existing Supabase client from src/lib/supabase.ts<br>
-            <strong>Definition of Done:</strong> Playwright test passes for login flow, error state displays on bad credentials.
-          </div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Create a Claude Chat project</h4>
+          <p>Go to <strong>claude.ai</strong> → Projects → Create. Name it "Building with AI" (or whatever suits you).</p>
         </div>
       </div>
-      <div class="spacer"></div>
-      <p>The bad card forces Claude Code to guess. The good card tells it exactly what to build, how to build it, and how to verify it's done.</p>
-    </div>
 
-    <div class="card card-accent">
-      <h3>Card template</h3>
-      <p>Every Agent card should follow this structure:</p>
-      <div class="code"><span class="comment">## Context</span>
-[Why this card exists. What it connects to in the broader project.]
-
-<span class="comment">## Requirements</span>
-[Specific, implementable specs. Not vague goals.]
-1. [Requirement 1]
-2. [Requirement 2]
-3. [Requirement 3]
-
-<span class="comment">## Tech notes</span>
-[Which files to modify, which patterns to follow, any constraints.]
-
-<span class="comment">## Definition of Done</span>
-- [How Claude Code knows it's finished]
-- [What tests should pass]
-- [What the output should look like]</div>
-    </div>
-
-    <div class="card">
-      <h3>The dependency graph</h3>
-      <p>Cards don't exist in isolation. Use Linear's blocking relationships to create an execution order:</p>
-      <div class="flow">
-        <div class="flow-box" style="background: var(--cyan-dim); color: var(--cyan);">Project Setup</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background: var(--purple-dim); color: var(--purple);">Data Model</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background: var(--blue-dim); color: var(--blue);">Login Page</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background: var(--green-dim); color: var(--green);">Dashboard</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Paste the system instructions</h4>
+          <p>In the project's custom instructions field, paste the following:</p>
+        </div>
       </div>
-      <p>Claude Code reads these relationships and executes in order. If "Login Page" is blocked by "Data Model," it won't start until the data model card is Done.</p>
-    </div>
 
-    <div class="card">
-      <h3>The batch execution prompt</h3>
-      <p>Once all cards are created and pre-build blockers are done, you give Claude Code <strong>one prompt</strong>:</p>
-      <div class="code"><span class="highlight">Work through the [Project Name] project in Linear (team: GTM).
-Only pick up cards labelled "Agent". Skip Manual and Claude Chat cards.
-Read the dependency graph and execute Agent cards in order. For each:
-1. Read the card description from Linear
-2. Implement the requirements
-3. Verify build passes clean
-4. Mark the card as Done with a comment summarising what was done
-5. Pick up the next unblocked Agent card
-
-If all Agent cards are blocked by non-Agent cards, stop and tell me.
-Stop and ask if you hit a decision not covered in the card spec.</span></div>
-      <p>That's it. One prompt. Claude Code chains through your entire project.</p>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Hooks →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 6: HOOKS -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s9">
-    <div class="section-number">Part 9</div>
-    <h1>Hooks — Automated Guardrails</h1>
-    <p class="section-subtitle">Hooks are scripts that run automatically during Claude Code sessions. They enforce discipline so you don't have to.</p>
-
-    <div class="card card-accent">
-      <h3>Why hooks matter</h3>
-      <p>Without hooks, Claude Code can:</p>
-      <ul>
-        <li>Skip tests to move faster</li>
-        <li>Forget to commit after making changes</li>
-        <li>Create cards without proper context</li>
-        <li>Move to the next card without reviewing quality</li>
-      </ul>
-      <div class="spacer"></div>
-      <p>Hooks are <strong>guardrails for the AI, not for you.</strong> They fire automatically at specific moments in the session and enforce the rules you'd otherwise have to remember to enforce manually.</p>
-    </div>
-
-    <div class="card">
-      <h3>The hook system</h3>
-      <div class="table-wrap">
-        <table>
-          <tr><th>Hook</th><th>When it fires</th><th>What it does</th></tr>
-          <tr><td><strong>session-start-reminder</strong></td><td>Session starts</td><td>Checks CLAUDE.md exists, uncommitted files, current branch</td></tr>
-          <tr><td><strong>post-edit-qa</strong></td><td>After 15+ file edits</td><td>Reminds to commit work</td></tr>
-          <tr><td><strong>post-card-done-deepcode</strong></td><td>Card marked Done</td><td>Triggers code review before moving on</td></tr>
-          <tr><td><strong>post-card-verify</strong></td><td>Card created</td><td>Checks card has project, labels, dependencies</td></tr>
-          <tr><td><strong>pre-card-create</strong></td><td>Before creating a card</td><td>Blocks creation if no CLAUDE.md (no project context)</td></tr>
-          <tr><td><strong>user-prompt-feedback</strong></td><td>Every prompt</td><td>Warns on "just do it" / "skip tests" patterns</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Where hooks live</h3>
-      <p>Hooks are shell scripts stored in your project repo:</p>
-      <div class="code">your-project/
-├── .claude/
-│   ├── hooks/
-│   │   ├── session-start-reminder.sh
-│   │   ├── post-edit-qa.sh
-│   │   ├── post-card-done-deepcode.sh
-│   │   ├── post-card-verify.sh
-│   │   ├── pre-card-create.sh
-│   │   └── user-prompt-feedback.sh
-│   └── settings.json  <span class="comment">← wires hooks to events</span>
-├── CLAUDE.md
-├── PROGRESS.md
-└── [your project files]</div>
-      <p>The <code>settings.json</code> file tells Claude Code when to run each hook. You'll get a pre-built package with all of these — just extract into your project root.</p>
-    </div>
-
-    <div class="callout callout-amber">
-      <div class="callout-label">Don't skip this</div>
-      <p>Hooks are the difference between "Claude Code that sometimes works" and "Claude Code that consistently works." They catch the mistakes before they compound. Install them on every project.</p>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: CLAUDE.md →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 7: CLAUDE.MD -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s10">
-    <div class="section-number">Part 10</div>
-    <h1>CLAUDE.md — Project Instructions for the AI</h1>
-    <p class="section-subtitle">Every project needs a CLAUDE.md file. It's the first thing Claude Code reads when it starts a session.</p>
-
-    <div class="card card-accent">
-      <h3>What goes in CLAUDE.md</h3>
-      <p>Think of CLAUDE.md as the onboarding doc you'd give a new developer joining your project. It tells Claude Code:</p>
-      <ul>
-        <li>What the project is and what it does</li>
-        <li>The tech stack and folder structure</li>
-        <li>Development rules (testing, deployment, things to never do)</li>
-        <li>How to interact with Linear (read cards, update status, follow dependencies)</li>
-        <li>A reference back to the Harness Framework doc for process context</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>Template</h3>
-      <div class="code" style="font-size: 11px;"><span class="comment"># [Project Name] — Instructions for Claude Code</span>
-
-<span class="comment">## Harness Framework</span>
-This project follows the Harness Framework v4.
-Read the full framework document in Linear (ASET project,
-document: "The Harness Framework v4") for process context.
-
-<span class="comment">## Project Overview</span>
-[What this project is and what it does]
-
-<span class="comment">## Tech Stack</span>
-[List all technologies, frameworks, services]
-
-<span class="comment">## Development Rules</span>
-
-<span class="highlight">### After EVERY code change:</span>
-1. Run the test suite
-2. Read the output carefully
-3. If any test fails → fix it → re-run
-4. Only report "done" when ALL tests pass
-
-<span class="highlight">### Linear Integration:</span>
-- Cards are the prompt — read them for requirements
-- Only pick up cards labelled "Agent"
-- Mark cards Done with a summary comment
-- Follow the dependency graph
-- If blocked, skip to next unblocked Agent card
-
-<span class="highlight">### Things to NEVER do:</span>
-- Delete user data without confirmation
-- Push to production without testing
-- Skip tests to save time
-- Work on non-Agent cards</div>
-    </div>
-
-    <div class="callout callout-green">
-      <div class="callout-label">The reference loop</div>
-      <p>CLAUDE.md points to the Harness Framework doc in Linear. The Harness doc contains the CLAUDE.md template. The first card in every project creates the CLAUDE.md. <strong>The system bootstraps itself.</strong></p>
-    </div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="next()">Next: Hands-on setup →</button>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 8: HANDS-ON -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="section" id="s11">
-    <div class="section-number">Part 11</div>
-    <h1>Let's Set You Up</h1>
-    <p class="section-subtitle">Time to get everything running. We'll do this step by step together.</p>
-
-    <div class="card card-accent">
-      <h3>Setup checklist</h3>
-      <div class="checklist">
-        <div class="check-item"><span class="check-icon">□</span> <strong>1. Get into Linear</strong> — if you've been invited to the Ailo workspace, you're already in. Check you can see the GTM team and the Harness Framework v4 doc.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>2. Create your Claude Chat project</strong> — go to claude.ai (use the app, not browser) → Projects → Create. Name it "Building with AI". Paste the system instructions below.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>3. Connect Linear MCP to Claude Chat</strong> — Settings → Connectors → Browse → search "Linear" → Connect. Ask an org admin to enable it if needed.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>4. Verify Claude Chat + Linear</strong> — in your project, ask "Please list my Linear issues". If it returns results, the connection works.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>5. Install Antigravity</strong> — download from anti-gravity.dev → drag to Applications → open it.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>6. Get your Linear API key</strong> — Linear → your avatar (bottom left) → Settings → API → Personal API keys → Create key. Save it in 1Password as a Secure Note — you only see it once.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>7. Configure Linear MCP in Antigravity</strong> — press Cmd+Shift+P → type "MCP" → Manage MCP Servers → View raw config → paste the JSON config (shown below) with your API key → Cmd+S to save → Refresh.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>8. Install Claude Code in the terminal</strong> — in Antigravity, open Terminal → New Terminal. Ignore the built-in AI panel (bottom right) — that's not Claude Code. Run:<br><code style="color: var(--green); font-size: 12px;">npm install -g @anthropic-ai/claude-code</code></div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>9. Launch Claude Code in dangerous mode</strong> — in the same terminal, run:<br><code style="color: var(--green); font-size: 12px;">claude --dangerously-skip-permissions</code><br>First time: select "Claude account with subscription" → login method 1 → authorise in browser. Use this command every time you start a session.</div>
-        <div class="check-item"><span class="check-icon">□</span> <strong>10. Test it</strong> — tell Claude Chat to create cards for a simple project. Then give Claude Code the kickoff prompt and watch it chain through the cards.</div>
-      </div>
-    </div>
-
-    <div class="card card-pink">
-      <h3>Claude Chat system instructions</h3>
-      <p>Paste this into your Claude Project's custom instructions:</p>
-      <div class="code" style="font-size: 11px;">You are a strategic AI assistant working within the Harness
+      <div class="code" style="font-size: 11.5px;">You are a strategic AI assistant working within the Harness
 Framework v4.
 
 Your role is Layer 1 (Strategist): you help with planning,
 architecture, card creation, and decision-making.
 
-<span class="highlight">CRITICAL RULES:</span>
-<span class="highlight">- NEVER build artifacts, write code, or create files directly.</span>
-<span class="highlight">- ALWAYS create Linear cards first. Cards are the work.</span>
-<span class="highlight">- Before starting ANY new project, read the Harness Framework</span>
-<span class="highlight">  v4 document from Linear at this URL:</span>
-<span class="highlight">  https://linear.app/ailo/document/the-harness-framework-v4-fbd8201f8f53</span>
-<span class="highlight">  and follow the New Project Setup Checklist.</span>
-<span class="highlight">- Do NOT proceed until you have read the process document.</span>
+CRITICAL RULES:
+- NEVER build artifacts, write code, or create files directly.
+- ALWAYS create Linear cards first. Cards are the work.
+- Before starting ANY new project, read the Harness Framework
+  v4 document from Linear and follow the New Project Setup
+  Checklist.
+- Do NOT proceed until you have read the process document.
 
 When the user describes something they want to build:
 1. Ask clarifying questions first
@@ -1238,74 +873,265 @@ You do NOT write code — that's Claude Code's job.
 Claude Code reads the cards and builds them.
 You create the cards and manage the strategy.
 
-Linear team: GTM
+Linear team: [your team name]
 Linear project: [varies per project]</div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Verify Claude Chat + Linear</h4>
+          <p>In your project, ask "Please list my Linear issues". If it returns results, the connection works.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-cyan">
+        <div class="callout-label">Why a project?</div>
+        <p style="margin:0;">Claude Chat projects let you set persistent instructions that apply to every conversation within that project. Without a project, you'd have to re-explain the Harness every time you start a new chat.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Claude Code →</button>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Linear MCP config for Antigravity</h3>
-      <p>Paste this into the MCP config JSON file (Cmd+Shift+P → "MCP" → Manage MCP Servers → View raw config):</p>
-      <div class="code" style="font-size: 11px;">{
-  "mcpServers": {
-    "linear": {
-      "command": "npx",
-      "args": ["-y", "mcp-linear"],
-      "env": {
-        "LINEAR_API_KEY": "<span class="highlight">lin_api_PASTE_YOUR_KEY_HERE</span>"
-      }
-    }
-  }
-}</div>
+    <!-- ============================================================ -->
+    <!-- SLIDE 7: Setup — Claude Code -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-7">
+      <span class="section-badge badge-setup"><span class="badge-dot"></span> Setup</span>
+      <h2>Claude Code</h2>
+      <h1>Install the builder</h1>
+
+      <p>Claude Code runs in the terminal inside Antigravity. Here's how to install and launch it.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Open a terminal in Antigravity</h4>
+          <p><strong>Terminal → New Terminal</strong> (or press <code style="font-family: var(--font-mono); font-size: 12px; background: var(--surface-raised); padding: 2px 6px; border-radius: 3px;">Ctrl + `</code>). Remember: use the <strong>terminal</strong>, not the built-in AI panel.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Install Claude Code</h4>
+          <p>The recommended method is the native installer (no Node.js dependency for Claude Code itself):</p>
+        </div>
+      </div>
+
+      <div class="code">curl -fsSL https://claude.ai/install.sh | bash</div>
+
+      <p style="font-size: 13px; color: var(--text-dim);">If you're on Windows, use PowerShell: <code style="font-family: var(--font-mono); font-size: 11px; background: var(--surface-raised); padding: 2px 6px; border-radius: 3px;">irm https://claude.ai/install.ps1 | iex</code></p>
+
+      <div class="callout callout-cyan">
+        <div class="callout-label">Why we still installed Node.js</div>
+        <p style="margin:0;">Claude Code itself no longer requires Node.js. But the Linear MCP server runs via <code style="font-family: var(--font-mono); font-size: 12px;">npx</code>, which does require Node.js. That's why we installed it in the prerequisites step.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Launch Claude Code in dangerous mode</h4>
+        </div>
+      </div>
+
+      <div class="code">claude --dangerously-skip-permissions</div>
+
+      <p>This skips all confirmation prompts so Claude Code runs autonomously. <strong>Use this command every time you start a session.</strong></p>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>First time: log in</h4>
+          <p>The first time you run <code style="font-family: var(--font-mono); font-size: 12px; background: var(--surface-raised); padding: 2px 6px; border-radius: 3px;">claude</code>, it will ask you to authenticate. Select <strong>"Claude account with subscription"</strong>, then <strong>"Login method 1"</strong>, and authorise in the browser.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-red">
+        <div class="callout-label">Do not confuse these</div>
+        <p style="margin:0;"><strong>Antigravity's built-in AI panel</strong> (bottom right of the IDE) is NOT Claude Code. It uses Antigravity's own credits. <strong>Claude Code</strong> runs in the terminal with the <code style="font-family: var(--font-mono); font-size: 12px;">claude</code> command. Always use the terminal.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Hooks & CLAUDE.md →</button>
+      </div>
     </div>
 
-    <div class="callout callout-green">
-      <div class="callout-label">What happens next</div>
-      <p>Once this is set up, your workflow becomes: <strong>open Claude Chat → describe what you want → Claude Chat creates the cards in Linear → open Antigravity terminal → run <code>claude --dangerously-skip-permissions</code> → paste the kickoff prompt → Claude Code builds everything → you review and deploy.</strong></p>
+    <!-- ============================================================ -->
+    <!-- SLIDE 8: Hooks & CLAUDE.md -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-8">
+      <span class="section-badge badge-setup"><span class="badge-dot"></span> Setup</span>
+      <h2>Hooks &amp; CLAUDE.md</h2>
+      <h1>Automated guardrails and project context</h1>
+
+      <div class="card">
+        <h3>Hooks — guardrails for the AI</h3>
+        <p>Hooks are scripts that run automatically during Claude Code sessions. They enforce discipline so you don't have to. Without them, Claude Code can skip tests, forget to commit, or move on without reviewing quality.</p>
+        <table class="info-table">
+          <tr><th>Hook</th><th>What it does</th></tr>
+          <tr><td>session-start-reminder</td><td>Checks CLAUDE.md exists, uncommitted files, current branch</td></tr>
+          <tr><td>post-edit-qa</td><td>Reminds to commit after 15+ file edits</td></tr>
+          <tr><td>post-card-done-deepcode</td><td>Triggers code review before moving to next card</td></tr>
+          <tr><td>post-card-verify</td><td>Checks card has project, labels, dependencies</td></tr>
+          <tr><td>pre-card-create</td><td>Blocks card creation if no CLAUDE.md (no project context)</td></tr>
+          <tr><td>user-prompt-feedback</td><td>Warns on "just do it" / "skip tests" patterns</td></tr>
+        </table>
+        <p style="margin-bottom:0; font-size:14px; color: var(--text-dim);">These live in <code style="font-family: var(--font-mono); font-size: 11px;">.claude/hooks/</code> in your project repo. You'll get a pre-built package with all of these — just extract into your project root.</p>
+      </div>
+
+      <div class="card">
+        <h3>CLAUDE.md — project instructions for the AI</h3>
+        <p>Every project needs a CLAUDE.md file in the root. It's the first thing Claude Code reads when it starts a session. Think of it as the onboarding doc you'd give a new developer joining your project.</p>
+        <p>It tells Claude Code: what the project is, the tech stack, development rules (testing, deployment, things to never do), how to interact with Linear, and a reference back to the Harness Framework doc.</p>
+      </div>
+
+      <div class="code" style="font-size: 11.5px;"># [Project Name] — Instructions for Claude Code
+
+## Harness Framework
+This project follows the Harness Framework v4.
+Read the full framework document in Linear for process context.
+
+## Project Overview
+[What this project is and what it does]
+
+## Tech Stack
+[List all technologies, frameworks, services]
+
+## Development Rules
+### After EVERY code change:
+1. Run the test suite
+2. Read the output carefully
+3. If any test fails → fix it → re-run
+4. Only report "done" when ALL tests pass
+
+### Linear Integration:
+- Cards are the prompt — read them for requirements
+- Only pick up cards labelled "Agent"
+- Mark cards Done with a summary comment
+- Follow the dependency graph
+- If blocked, skip to next unblocked Agent card
+
+### Things to NEVER do:
+- Delete user data without confirmation
+- Push to production without testing
+- Skip tests to save time
+- Work on non-Agent cards</div>
+
+      <div class="callout callout-cyan">
+        <div class="callout-label">The reference loop</div>
+        <p style="margin:0;">CLAUDE.md points to the Harness Framework doc in Linear. The Harness doc contains the CLAUDE.md template. The first card in every project creates the CLAUDE.md. The system bootstraps itself.</p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="next()">Next: Your First Run →</button>
+      </div>
     </div>
 
-    <div class="card" style="background: var(--cyan-dim); border-color: rgba(238,11,79,0.15);">
-      <h3 style="color: var(--cyan);">You're ready.</h3>
-      <p>The Harness Framework v4 doc lives in Linear as the permanent reference. Your Claude Chat project knows the process and will ALWAYS create cards before building. Claude Code runs in the terminal with dangerous mode. And Linear ties it all together as the shared memory.</p>
-      <div class="spacer"></div>
-      <p><strong>The goal isn't zero human involvement. It's zero unnecessary human involvement.</strong></p>
+    <!-- ============================================================ -->
+    <!-- SLIDE 9: Your First Run -->
+    <!-- ============================================================ -->
+    <div class="slide" id="slide-9">
+      <span class="section-badge badge-setup"><span class="badge-dot"></span> Setup</span>
+      <h2>Your First Run</h2>
+      <h1>Put it all together</h1>
+
+      <p>Everything is installed and connected. Here's how the workflow actually looks in practice.</p>
+
+      <div class="card">
+        <h3>The workflow</h3>
+        <p><strong>1.</strong> Open your Claude Chat project and describe what you want to build.<br>
+        <strong>2.</strong> Claude Chat creates structured cards in Linear with proper labels, dependencies, and specs.<br>
+        <strong>3.</strong> Open Antigravity and launch Claude Code in the terminal with <code style="font-family: var(--font-mono); font-size: 12px; background: var(--surface-raised); padding: 2px 6px; border-radius: 3px;">claude --dangerously-skip-permissions</code><br>
+        <strong>4.</strong> Give Claude Code the kickoff prompt (below).<br>
+        <strong>5.</strong> Claude Code chains through all Agent cards, building each one autonomously.<br>
+        <strong>6.</strong> You review the output and deploy.</p>
+      </div>
+
+      <h3>The kickoff prompt</h3>
+      <p>Once all cards are created, paste this into Claude Code:</p>
+
+      <div class="code" style="font-size: 11.5px;">Work through the [Project Name] project in Linear (team: [your team]).
+Only pick up cards labelled "Agent". Skip Manual and Claude Chat cards.
+Read the dependency graph and execute Agent cards in order. For each:
+1. Read the card description from Linear
+2. Implement the requirements
+3. Verify build passes clean
+4. Mark the card as Done with a comment summarising what was done
+5. Pick up the next unblocked Agent card
+
+If all Agent cards are blocked by non-Agent cards, stop and tell me.
+Stop and ask if you hit a decision not covered in the card spec.</div>
+
+      <p>That's it. One prompt. Claude Code chains through your entire project.</p>
+
+      <div class="card">
+        <h3>Full setup checklist</h3>
+        <div class="check-item"><span class="check-icon">□</span> <strong>1. Node.js installed</strong> — <code style="font-family: var(--font-mono); font-size: 11px;">node --version</code> returns v18+</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>2. Linear account created</strong> — workspace, team, and first project set up</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>3. Claude Pro subscription active</strong> — at claude.ai</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>4. Antigravity installed</strong> — downloaded from anti-gravity.dev</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>5. Linear API key created</strong> — saved securely (you only see it once)</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>6. Linear MCP configured in Antigravity</strong> — paste config into MCP settings</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>7. Linear MCP connected to Claude Chat</strong> — via Settings → Connectors</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>8. Claude Chat project created</strong> — with system instructions pasted</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>9. Claude Code installed</strong> — via native installer in Antigravity terminal</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>10. Claude Code authenticated</strong> — first run, login via browser</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>11. Test the connection</strong> — tell Claude Code to list your Linear issues</div>
+        <div class="check-item"><span class="check-icon">□</span> <strong>12. Run your first card</strong> — give Claude Code the kickoff prompt</div>
+      </div>
+
+      <div class="callout callout-green">
+        <div class="callout-label">What happens next</div>
+        <p style="margin:0;">Once this is set up, your workflow becomes: <strong>open Claude Chat → describe what you want → Claude Chat creates the cards → open Antigravity terminal → launch Claude Code → paste the kickoff prompt → Claude Code builds everything → you review and deploy.</strong></p>
+      </div>
+
+      <div class="card" style="background: var(--cyan-dim); border-color: rgba(34,211,238,0.2);">
+        <h3 style="color: var(--cyan);">You're ready.</h3>
+        <p>The Harness Framework v4 doc lives in Linear as the permanent reference. Your Claude Chat project knows the process and will always create cards before building. Claude Code runs in the terminal. And Linear ties it all together as the shared memory.</p>
+        <div class="spacer"></div>
+        <p style="margin-bottom:0;"><strong>The goal isn't zero human involvement. It's zero unnecessary human involvement.</strong></p>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prev()">← Back</button>
+        <button class="btn btn-primary" onclick="goTo(0)">↺ Back to start</button>
+      </div>
     </div>
 
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" onclick="prev()">← Back</button>
-      <button class="btn btn-primary" onclick="goTo(0)">↺ Back to start</button>
-    </div>
   </div>
 
-</div>
+  <script>
+    const totalSlides = 10;
+    let current = 0;
 
-<script>
-  let current = 0;
-  const total = 12;
+    function updateProgress() {
+      const pct = ((current + 1) / totalSlides) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressCount').textContent = (current + 1) + ' / ' + totalSlides;
+    }
 
-  function goTo(n) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById('s' + n).classList.add('active');
-    
-    document.querySelectorAll('.nav-dot').forEach((d, i) => {
-      d.classList.remove('active');
-      if (i < n) d.classList.add('done');
-      else d.classList.remove('done');
-      if (i === n) d.classList.add('active');
+    function goTo(n) {
+      document.getElementById('slide-' + current).classList.remove('active');
+      current = n;
+      document.getElementById('slide-' + current).classList.add('active');
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function next() { if (current < totalSlides - 1) goTo(current + 1); }
+    function prev() { if (current > 0) goTo(current - 1); }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
     });
-    
-    document.querySelector('.nav-counter').textContent = (n + 1) + ' / ' + total;
-    current = n;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
 
-  function next() { if (current < total - 1) goTo(current + 1); }
-  function prev() { if (current > 0) goTo(current - 1); }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
-  });
-</script>
-
+    updateProgress();
+  </script>
 </body>
 </html>
