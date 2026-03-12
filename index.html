@@ -4,29 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Harness Framework — Setup Guide</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --surface-raised: #1a1a26;
-      --border: rgba(255,255,255,0.06);
-      --border-active: rgba(255,255,255,0.12);
-      --text: #e8e8ed;
-      --text-dim: #8888a0;
-      --text-faint: #55556a;
-      --cyan: #22d3ee;
-      --cyan-dim: rgba(34,211,238,0.06);
-      --cyan-glow: rgba(34,211,238,0.15);
-      --green: #4ade80;
-      --green-dim: rgba(74,222,128,0.06);
-      --amber: #fbbf24;
-      --amber-dim: rgba(251,191,36,0.08);
-      --red: #f87171;
-      --red-dim: rgba(248,113,113,0.06);
-      --purple: #a78bfa;
-      --purple-dim: rgba(167,139,250,0.06);
-      --font-body: 'Outfit', -apple-system, sans-serif;
+      --bg: #F7F7F7;
+      --surface: #FFFFFF;
+      --surface-raised: #F0F0F4;
+      --border: rgba(28,30,38,0.08);
+      --border-active: rgba(28,30,38,0.15);
+      --text: #1C1E26;
+      --text-dim: #9A9BA7;
+      --text-faint: #B8B9C3;
+      --cyan: #EE0B4F;
+      --cyan-dim: rgba(238,11,79,0.05);
+      --cyan-glow: rgba(238,11,79,0.12);
+      --green: #2E8B57;
+      --green-dim: rgba(46,139,87,0.06);
+      --amber: #D97706;
+      --amber-dim: rgba(217,119,6,0.06);
+      --red: #DC2626;
+      --red-dim: rgba(220,38,38,0.05);
+      --purple: #7C3AED;
+      --purple-dim: rgba(124,58,237,0.05);
+      --font-body: 'Inter', 'Circular Std', -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       --radius: 10px;
     }
@@ -58,8 +58,8 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
+      background: #1C1E26;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       padding: 0 24px;
     }
     .progress-inner {
@@ -75,26 +75,26 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text-dim);
+      color: rgba(255,255,255,0.7);
       white-space: nowrap;
     }
     .progress-bar {
       flex: 1;
       height: 3px;
-      background: var(--border);
+      background: rgba(255,255,255,0.12);
       border-radius: 2px;
       overflow: hidden;
     }
     .progress-fill {
       height: 100%;
-      background: var(--cyan);
+      background: #EE0B4F;
       border-radius: 2px;
       transition: width 0.4s ease;
     }
     .progress-count {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--text-faint);
+      color: rgba(255,255,255,0.4);
     }
 
     /* Section badge */
@@ -140,7 +140,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--cyan);
+      color: #EE0B4F;
       margin-bottom: 24px;
     }
     h3 {
@@ -159,6 +159,7 @@
       border-radius: var(--radius);
       padding: 24px;
       margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(28,30,38,0.04);
     }
     .card h3 { margin-bottom: 8px; }
     .card p:last-child { margin-bottom: 0; }
@@ -202,8 +203,9 @@
     .code {
       font-family: var(--font-mono);
       font-size: 12.5px;
-      background: var(--surface-raised);
-      border: 1px solid var(--border);
+      background: #1C1E26;
+      color: #e8e8ed;
+      border: none;
       border-radius: 6px;
       padding: 16px 20px;
       margin-bottom: 16px;
@@ -224,15 +226,15 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: var(--cyan-dim);
-      border: 1px solid rgba(34,211,238,0.2);
+      background: rgba(238,11,79,0.08);
+      border: 1px solid rgba(238,11,79,0.15);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
       font-size: 12px;
       font-weight: 600;
-      color: var(--cyan);
+      color: #EE0B4F;
       margin-top: 2px;
     }
     .step-content { flex: 1; }
@@ -248,8 +250,9 @@
       font-family: var(--font-mono);
       font-size: 12px;
       line-height: 1.6;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: #1C1E26;
+      color: #e8e8ed;
+      border: none;
       border-radius: var(--radius);
       padding: 24px;
       margin-bottom: 20px;
@@ -265,7 +268,7 @@
     }
     .rule:last-child { border-bottom: none; }
     .rule-arrow {
-      color: var(--cyan);
+      color: #EE0B4F;
       margin-right: 8px;
       font-family: var(--font-mono);
     }
@@ -303,6 +306,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 20px;
+      box-shadow: 0 1px 3px rgba(28,30,38,0.04);
     }
     .tool-card h4 {
       font-size: 14px;
@@ -314,7 +318,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: var(--cyan);
+      color: #EE0B4F;
       margin-bottom: 8px;
     }
     .tool-card p { font-size: 13px; color: var(--text-dim); margin: 0; }
@@ -383,8 +387,8 @@
       transition: all 0.15s ease;
     }
     .btn-primary {
-      background: var(--cyan);
-      color: var(--bg);
+      background: #1C1E26;
+      color: #FFFFFF;
     }
     .btn-primary:hover { filter: brightness(1.1); }
     .btn-secondary {
@@ -394,7 +398,7 @@
     }
     .btn-secondary:hover {
       border-color: var(--border-active);
-      color: var(--text);
+      color: #1C1E26;
     }
 
     .spacer { height: 12px; }
@@ -487,11 +491,6 @@
           <span class="part-badge part-setup">Setup</span>
           <span>Claude Chat project, Claude Code, hooks, and your first run</span>
         </div>
-      </div>
-
-      <div class="callout callout-cyan">
-        <div class="callout-label">Note</div>
-        <p style="margin:0;">We may not get through everything in one sitting — that's fine. The key is understanding the philosophy and getting your core tools set up. We can complete the hands-on setup in a follow-up session.</p>
       </div>
 
       <div class="nav-buttons">
@@ -656,7 +655,7 @@
         <p>Every card gets exactly one label that determines who executes it:</p>
         <table class="info-table">
           <tr><th>Label</th><th>Who executes</th></tr>
-          <tr><td style="color: var(--cyan);">Agent</td><td>Claude Code builds it — code, tests, implementation</td></tr>
+          <tr><td style="color: #EE0B4F;">Agent</td><td>Claude Code builds it — code, tests, implementation</td></tr>
           <tr><td style="color: var(--purple);">Claude Chat</td><td>Claude Chat handles it — specs, strategy, documents</td></tr>
           <tr><td style="color: var(--amber);">Manual</td><td>You do it — screenshots, meetings, visual review, deployment</td></tr>
         </table>
@@ -1090,8 +1089,8 @@ Stop and ask if you hit a decision not covered in the card spec.</div>
         <p style="margin:0;">Once this is set up, your workflow becomes: <strong>open Claude Chat → describe what you want → Claude Chat creates the cards → open Antigravity terminal → launch Claude Code → paste the kickoff prompt → Claude Code builds everything → you review and deploy.</strong></p>
       </div>
 
-      <div class="card" style="background: var(--cyan-dim); border-color: rgba(34,211,238,0.2);">
-        <h3 style="color: var(--cyan);">You're ready.</h3>
+      <div class="card" style="background: #FEF7F9; border-color: rgba(238,11,79,0.15);">
+        <h3 style="color: #EE0B4F;">You're ready.</h3>
         <p>The Harness Framework v4 doc lives in Linear as the permanent reference. Your Claude Chat project knows the process and will always create cards before building. Claude Code runs in the terminal. And Linear ties it all together as the shared memory.</p>
         <div class="spacer"></div>
         <p style="margin-bottom:0;"><strong>The goal isn't zero human involvement. It's zero unnecessary human involvement.</strong></p>
